@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="806ee87d-8ed6-44c3-99cb-b389f12ec6ce" name="Changes" comment="add code">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/nunu-layout.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README_zh.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/job/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/job/wire/wire.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/job/wire/wire_gen.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/migration/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/migration/wire/wire.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/migration/wire/wire_gen.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/server/wire/wire.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/server/wire/wire_gen.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/local.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/prod.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/database/migration.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/handler/user.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/job/job.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/middleware/cors.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/middleware/jwt.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/middleware/log.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/middleware/sign.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/model/user.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/provider/provider.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/repository/user.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/server/http.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/service/user.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/service/user_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/config/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/db/db.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/log/log.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/log/log_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/log/storage/logs/server.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/md5/md5.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/rdb/redis.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/resp/resp.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/sonyflake/sonyflake.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/uuid/uuid.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/server/handler/storage/logs/server.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/server/handler/user_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file:///usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KubernetesApiPersistence">
+    <option name="context" value="docker-desktop" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2QVdKitAx18JFjxLxnOOz0vPhX1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/chris/Projects/stu/nunu-layout/internal/handler&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.externalTools&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/handler" />
+      <recent name="$PROJECT_DIR$/internal/service" />
+      <recent name="$PROJECT_DIR$/pkg/log" />
+      <recent name="$PROJECT_DIR$/cmd" />
+      <recent name="$PROJECT_DIR$/config" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/provider" />
+      <recent name="$PROJECT_DIR$/cmd/server/wire" />
+      <recent name="$PROJECT_DIR$/cmd/job/wire" />
+      <recent name="$PROJECT_DIR$/cmd/migration/wire" />
+      <recent name="$PROJECT_DIR$/cmd/server" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Build.go build wire.go (1)">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="nunu-layout" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/codingcn/gin-starter" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build wire.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="nunu-layout" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="github.com/codingcn/gin-starter" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/job/wire/wire.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build wire.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="nunu-layout" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="github.com/codingcn/gin-starter" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/server/wire/wire.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestCreateUser in github.com/codingcn/gin-starter/test/server/handler" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="nunu-layout" />
+      <working_directory value="$PROJECT_DIR$/test/server/handler" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/codingcn/gin-starter/test/server/handler" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestCreateUser\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestGetUserByEmail in github.com/codingcn/gin-starter/test/server/handler" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="nunu-layout" />
+      <working_directory value="$PROJECT_DIR$/test/server/handler" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/codingcn/gin-starter/test/server/handler" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetUserByEmail\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestGetUserByID in github.com/codingcn/gin-starter/test/server/handler" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="nunu-layout" />
+      <working_directory value="$PROJECT_DIR$/test/server/handler" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/codingcn/gin-starter/test/server/handler" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetUserByID\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="nunu-layout" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <package value="github.com/codingcn/gin-starter" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build wire.go (1)" />
+        <item itemvalue="Go Build.go build wire.go" />
+        <item itemvalue="Go Test.TestGetUserByEmail in github.com/codingcn/gin-starter/test/server/handler" />
+        <item itemvalue="Go Test.TestCreateUser in github.com/codingcn/gin-starter/test/server/handler" />
+        <item itemvalue="Go Test.TestGetUserByID in github.com/codingcn/gin-starter/test/server/handler" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add code" />
+    <option name="LAST_COMMIT_MESSAGE" value="add code" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/config/config.go</url>
+          <line>14</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
