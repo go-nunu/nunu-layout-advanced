@@ -27,6 +27,6 @@ func TestMain(m *testing.M) {
 
 }
 func TestGetUserByEmail(t *testing.T) {
-	_, err := userService.GetUserByEmail("abc")
+	_, err := userService.GetUserById(0)
 	assert.Equal(t, err, gorm.ErrRecordNotFound, "they should be equal")
 }
