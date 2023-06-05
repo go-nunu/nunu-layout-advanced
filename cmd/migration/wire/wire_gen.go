@@ -7,9 +7,9 @@
 package wire
 
 import (
-	"github.com/go-nunu/nunu-layout/internal/dao"
-	"github.com/go-nunu/nunu-layout/internal/migration"
-	"github.com/go-nunu/nunu-layout/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/internal/dao"
+	"github.com/go-nunu/nunu-layout-advanced/internal/migration"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/spf13/viper"
 )
 

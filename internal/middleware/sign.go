@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout/pkg/helper/md5"
-	"github.com/go-nunu/nunu-layout/pkg/helper/resp"
-	"github.com/go-nunu/nunu-layout/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/md5"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/spf13/viper"
 	"net/http"
 	"sort"

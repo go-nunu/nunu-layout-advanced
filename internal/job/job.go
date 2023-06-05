@@ -2,7 +2,7 @@ package job
 
 import (
 	"fmt"
-	"github.com/go-nunu/nunu-layout/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/robfig/cron"
 	"gorm.io/gorm"
 )

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/go-nunu/nunu-layout/cmd/migration/wire"
-	"github.com/go-nunu/nunu-layout/pkg/config"
-	"github.com/go-nunu/nunu-layout/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/cmd/migration/wire"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 )
 
 func main() {

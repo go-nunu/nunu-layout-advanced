@@ -1,6 +1,6 @@
 # Nunu - An Elegant Golang Scaffold 
 
-[简体中文介绍](https://github.com/go-nunu/nunu-layout/blob/main/README_zh.md)
+[简体中文介绍](https://github.com/go-nunu/nunu-layout-advanced/blob/main/README_zh.md)
 
 Nunu is an application scaffold based on Golang. Its name comes from the character Nunu in League of Legends, who is a little boy riding on the shoulder of a snowman. Like Nunu, Go-Nunu also stands on the shoulders of giants, and it is composed of various third-party libraries, including gin, gorm, wire, viper, zap, golang-jwt, go-redis, testify, sonyflake, tableflip, go-survey, cobra, etc. These libraries are very popular in the Golang ecosystem, and their combination can help you quickly build an efficient and reliable application.
 

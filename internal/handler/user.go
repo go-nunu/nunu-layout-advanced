@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout/internal/model"
-	"github.com/go-nunu/nunu-layout/internal/service"
-	"github.com/go-nunu/nunu-layout/pkg/helper/resp"
+	"github.com/go-nunu/nunu-layout-advanced/internal/model"
+	"github.com/go-nunu/nunu-layout-advanced/internal/service"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
 	"go.uber.org/zap"
 	"net/http"
 )

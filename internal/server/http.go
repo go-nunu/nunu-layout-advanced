@@ -3,10 +3,10 @@ package server
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout/internal/handler"
-	"github.com/go-nunu/nunu-layout/internal/middleware"
-	"github.com/go-nunu/nunu-layout/pkg/helper/resp"
-	"github.com/go-nunu/nunu-layout/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
+	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 )
 
 func NewServerHTTP(

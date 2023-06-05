@@ -8,13 +8,13 @@ package wire
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout/internal/dao"
-	"github.com/go-nunu/nunu-layout/internal/handler"
-	"github.com/go-nunu/nunu-layout/internal/middleware"
-	"github.com/go-nunu/nunu-layout/internal/server"
-	"github.com/go-nunu/nunu-layout/internal/service"
-	"github.com/go-nunu/nunu-layout/pkg/helper/sonyflake"
-	"github.com/go-nunu/nunu-layout/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/internal/dao"
+	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
+	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
+	"github.com/go-nunu/nunu-layout-advanced/internal/server"
+	"github.com/go-nunu/nunu-layout-advanced/internal/service"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/sonyflake"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/spf13/viper"
 )
 

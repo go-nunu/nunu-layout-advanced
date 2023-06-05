@@ -52,27 +52,27 @@
 2023-06-05 15:52:04	[34minfo[0m	/Users/chris/Projects/stu/nunu-layout/internal/middleware/jwt.go:55	建立请求	{"trace": "66ab47224d8602f41e275df08e55582f", "request_method": "POST", "request_headers": "{\"Authorization\":[\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJ1c2VyU2lkIjoiOHpsdGxQRzhXSCIsIm5pY2tuYW1lIjoi55CD55CDIiwidXNlcklkIjowfSwiZXhwIjoxNjg3NzcwMzYzLCJqdGkiOiI4emx0bFBHOFdIIiwiaXNzIjoiaHR0cHM6Ly90ZWh1Yi5jb20vYXBpIiwibmJmIjoxNjcyMjE3NzYzLCJzdWIiOiI4emx0bFBHOFdIIn0.G0sSUzj3GBANqj6dU7rSMsr44SARgYwH1ERwKUCaxsM\"]}", "request_url": "/user", "request_params": "{\"email\":\"5303221@gmail.com\",\"username\":\"test\"}"}
 2023-06-05 15:52:04	[34minfo[0m	/Users/chris/Projects/stu/nunu-layout/internal/middleware/jwt.go:55	建立请求	{"trace": "66ab47224d8602f41e275df08e55582f", "request_method": "POST", "request_headers": "{\"Authorization\":[\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJ1c2VyU2lkIjoiOHpsdGxQRzhXSCIsIm5pY2tuYW1lIjoi55CD55CDIiwidXNlcklkIjowfSwiZXhwIjoxNjg3NzcwMzYzLCJqdGkiOiI4emx0bFBHOFdIIiwiaXNzIjoiaHR0cHM6Ly90ZWh1Yi5jb20vYXBpIiwibmJmIjoxNjcyMjE3NzYzLCJzdWIiOiI4emx0bFBHOFdIIn0.G0sSUzj3GBANqj6dU7rSMsr44SARgYwH1ERwKUCaxsM\"]}", "request_url": "/user", "request_params": "{\"email\":\"5303221@gmail.com\",\"username\":\"test\"}"}
 2023-06-05 15:52:04	[31merror[0m	/Users/chris/Projects/stu/nunu-layout/internal/middleware/jwt.go:77	token error	{"trace": "66ab47224d8602f41e275df08e55582f", "request_method": "POST", "request_headers": "{\"Authorization\":[\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJ1c2VyU2lkIjoiOHpsdGxQRzhXSCIsIm5pY2tuYW1lIjoi55CD55CDIiwidXNlcklkIjowfSwiZXhwIjoxNjg3NzcwMzYzLCJqdGkiOiI4emx0bFBHOFdIIiwiaXNzIjoiaHR0cHM6Ly90ZWh1Yi5jb20vYXBpIiwibmJmIjoxNjcyMjE3NzYzLCJzdWIiOiI4emx0bFBHOFdIIn0.G0sSUzj3GBANqj6dU7rSMsr44SARgYwH1ERwKUCaxsM\"]}", "request_url": "/user", "request_params": "{\"email\":\"5303221@gmail.com\",\"username\":\"test\"}", "data": {"params":null,"url":{"Scheme":"","Opaque":"","User":null,"Host":"","Path":"/user","RawPath":"","OmitHost":false,"ForceQuery":false,"RawQuery":"","Fragment":"","RawFragment":""}}}
-github.com/go-nunu/nunu-layout/internal/middleware.StrictAuth.func1
+github.com/go-nunu/nunu-layout-advanced/internal/middleware.StrictAuth.func1
 	/Users/chris/Projects/stu/nunu-layout/internal/middleware/jwt.go:77
 github.com/gin-gonic/gin.(*Context).Next
 	/Users/chris/Go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
-github.com/go-nunu/nunu-layout/internal/middleware.NoAuth.func1
+github.com/go-nunu/nunu-layout-advanced/internal/middleware.NoAuth.func1
 	/Users/chris/Projects/stu/nunu-layout/internal/middleware/jwt.go:56
 github.com/gin-gonic/gin.(*Context).Next
 	/Users/chris/Go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
-github.com/go-nunu/nunu-layout/internal/middleware.ResponseLogMiddleware.func1
+github.com/go-nunu/nunu-layout-advanced/internal/middleware.ResponseLogMiddleware.func1
 	/Users/chris/Projects/stu/nunu-layout/internal/middleware/log.go:48
 github.com/gin-gonic/gin.(*Context).Next
 	/Users/chris/Go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
-github.com/go-nunu/nunu-layout/internal/middleware.NoAuth.func1
+github.com/go-nunu/nunu-layout-advanced/internal/middleware.NoAuth.func1
 	/Users/chris/Projects/stu/nunu-layout/internal/middleware/jwt.go:56
 github.com/gin-gonic/gin.(*Context).Next
 	/Users/chris/Go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
-github.com/go-nunu/nunu-layout/internal/middleware.CORSMiddleware.func1
+github.com/go-nunu/nunu-layout-advanced/internal/middleware.CORSMiddleware.func1
 	/Users/chris/Projects/stu/nunu-layout/internal/middleware/cors.go:20
 github.com/gin-gonic/gin.(*Context).Next
 	/Users/chris/Go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
-github.com/go-nunu/nunu-layout/internal/middleware.RequestLogMiddleware.func1
+github.com/go-nunu/nunu-layout-advanced/internal/middleware.RequestLogMiddleware.func1
 	/Users/chris/Projects/stu/nunu-layout/internal/middleware/log.go:40
 github.com/gin-gonic/gin.(*Context).Next
 	/Users/chris/Go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
@@ -88,9 +88,9 @@ github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
 	/Users/chris/Go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/gin.go:620
 github.com/gin-gonic/gin.(*Engine).ServeHTTP
 	/Users/chris/Go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/gin.go:576
-github.com/go-nunu/nunu-layout/test/server/handler.NewRequest
+github.com/go-nunu/nunu-layout-advanced/test/server/handler.NewRequest
 	/Users/chris/Projects/stu/nunu-layout/test/server/handler/user_test.go:58
-github.com/go-nunu/nunu-layout/test/server/handler.TestCreateUser
+github.com/go-nunu/nunu-layout-advanced/test/server/handler.TestCreateUser
 	/Users/chris/Projects/stu/nunu-layout/test/server/handler/user_test.go:84
 testing.tRunner
 	/usr/local/go/src/testing/testing.go:1576
