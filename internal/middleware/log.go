@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-nunu/nunu-layout/pkg/helper/md5"
+	"github.com/go-nunu/nunu-layout/pkg/helper/uuid"
 	"github.com/go-nunu/nunu-layout/pkg/log"
-	"github.com/go-nunu/nunu-layout/pkg/md5"
-	"github.com/go-nunu/nunu-layout/pkg/uuid"
 	"go.uber.org/zap"
 	"io"
 	"strconv"
@@ -27,15 +27,15 @@ func RequestLogMiddleware(log *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// 每次请求都初始化一次配置
 		trace := md5.Md5(uuid.GenUUID())
-		log.NewGinContext(ctx, zap.String("trace", trace))
-		log.NewGinContext(ctx, zap.String("request_method", ctx.Request.Method))
+		log.NewContext(ctx, zap.String("trace", trace))
+		log.NewContext(ctx, zap.String("request_method", ctx.Request.Method))
 		headers, _ := json.Marshal(ctx.Request.Header)
-		log.NewGinContext(ctx, zap.String("request_headers", string(headers)))
-		log.NewGinContext(ctx, zap.String("request_url", ctx.Request.URL.String()))
+		log.NewContext(ctx, zap.String("request_headers", string(headers)))
+		log.NewContext(ctx, zap.String("request_url", ctx.Request.URL.String()))
 		if ctx.Request.Body != nil {
 			bodyBytes, _ := ctx.GetRawData()
 			ctx.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // 关键点
-			log.NewGinContext(ctx, zap.String("request_params", string(bodyBytes)))
+			log.NewContext(ctx, zap.String("request_params", string(bodyBytes)))
 		}
 		ctx.Next()
 	}
@@ -54,7 +54,7 @@ func ResponseLogMiddleware(log *log.Logger) gin.HandlerFunc {
 		if strings.Contains(ctx.Request.URL.Path, "storage") {
 			return
 		}
-		log.WithGinContext(ctx).Info("响应返回", zap.Any("response_body", blw.body.String()), zap.Any("time", fmt.Sprintf("%sms", strconv.Itoa(duration))))
+		log.WithContext(ctx).Info("响应返回", zap.Any("response_body", blw.body.String()), zap.Any("time", fmt.Sprintf("%sms", strconv.Itoa(duration))))
 		statusCode := ctx.Writer.Status()
 		fmt.Println(statusCode)
 		//if statusCode >= 400 {

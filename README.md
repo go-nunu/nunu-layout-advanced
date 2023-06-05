@@ -106,7 +106,7 @@ The directory structure of Nunu is as follows:
 │   │   └── user.go
 │   ├── provider
 │   │   └── provider.go
-│   ├── repository
+│   ├── dao
 │   │   └── user.go
 │   ├── server
 │   │   └── http.go

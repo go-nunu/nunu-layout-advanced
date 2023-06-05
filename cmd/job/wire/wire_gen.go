@@ -7,8 +7,8 @@
 package wire
 
 import (
+	"github.com/go-nunu/nunu-layout/internal/dao"
 	"github.com/go-nunu/nunu-layout/internal/job"
-	"github.com/go-nunu/nunu-layout/pkg/db"
 	"github.com/go-nunu/nunu-layout/pkg/log"
 	"github.com/spf13/viper"
 )
@@ -17,8 +17,8 @@ import (
 
 // wire.go 初始化模块
 func NewApp(viperViper *viper.Viper, logger *log.Logger) (*job.Job, func(), error) {
-	gormDB := db.NewDB(viperViper)
-	jobJob := job.NewJob(gormDB, logger)
+	db := dao.NewDB(viperViper)
+	jobJob := job.NewJob(db, logger)
 	return jobJob, func() {
 	}, nil
 }

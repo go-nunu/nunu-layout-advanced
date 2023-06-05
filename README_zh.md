@@ -104,7 +104,7 @@ Nunu的目录结构如下：
 │   │   └── user.go
 │   ├── provider
 │   │   └── provider.go
-│   ├── repository
+│   ├── dao
 │   │   └── user.go
 │   ├── server
 │   │   └── http.go

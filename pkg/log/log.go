@@ -17,6 +17,10 @@ type Logger struct {
 }
 
 func NewLog(conf *viper.Viper) *Logger {
+	return initZap(conf)
+}
+
+func initZap(conf *viper.Viper) *Logger {
 	// 日志地址 "out.log" 自定义
 	lp := conf.GetString("log.log_file_name")
 	// 日志级别 DEBUG,ERROR, INFO
@@ -89,13 +93,13 @@ func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	//enc.AppendString(t.Format("2006-01-02 15:04:05.000000000"))
 }
 
-// NewGinContext 给指定的context添加字段
-func (l *Logger) NewGinContext(ctx *gin.Context, fields ...zapcore.Field) {
-	ctx.Set(LOGGER_KEY, l.WithGinContext(ctx).With(fields...))
+// NewContext 给指定的context添加字段
+func (l *Logger) NewContext(ctx *gin.Context, fields ...zapcore.Field) {
+	ctx.Set(LOGGER_KEY, l.WithContext(ctx).With(fields...))
 }
 
-// WithGinContext 从指定的context返回一个zap实例
-func (l *Logger) WithGinContext(ctx *gin.Context) *Logger {
+// WithContext 从指定的context返回一个zap实例
+func (l *Logger) WithContext(ctx *gin.Context) *Logger {
 	if ctx == nil {
 		return l
 	}

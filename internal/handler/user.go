@@ -4,22 +4,20 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout/internal/model"
 	"github.com/go-nunu/nunu-layout/internal/service"
-	"github.com/go-nunu/nunu-layout/pkg/log"
-	"github.com/go-nunu/nunu-layout/pkg/resp"
-	"github.com/sony/sonyflake"
+	"github.com/go-nunu/nunu-layout/pkg/helper/resp"
 	"go.uber.org/zap"
 	"net/http"
 )
 
 type UserHandler struct {
+	*Handler
 	userService *service.UserService
-	log         *log.Logger
 }
 
-func NewUserHandler(log *log.Logger, sf *sonyflake.Sonyflake, userService *service.UserService) *UserHandler {
+func NewUserHandler(handler *Handler, userService *service.UserService) *UserHandler {
 	return &UserHandler{
+		Handler:     handler,
 		userService: userService,
-		log:         log,
 	}
 }
 
@@ -38,7 +36,7 @@ func (c *UserHandler) CreateUser(ctx *gin.Context) {
 		Username: params.Username,
 		Email:    params.Email,
 	})
-	c.log.Logger.Info("CreateUser", zap.Any("user", user))
+	c.logger.Info("CreateUser", zap.Any("user", user))
 	if err != nil {
 		resp.HandleError(ctx, http.StatusInternalServerError, 1, err.Error(), nil)
 		return
@@ -56,7 +54,7 @@ func (c *UserHandler) GetUserById(ctx *gin.Context) {
 	}
 
 	user, err := c.userService.GetUserById(params.Id)
-	c.log.Logger.Info("GetUserByID", zap.Any("user", user))
+	c.logger.Info("GetUserByID", zap.Any("user", user))
 	if err != nil {
 		resp.HandleError(ctx, http.StatusInternalServerError, 1, err.Error(), nil)
 		return

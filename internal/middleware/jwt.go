@@ -3,8 +3,8 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-nunu/nunu-layout/pkg/helper/resp"
 	"github.com/go-nunu/nunu-layout/pkg/log"
-	"github.com/go-nunu/nunu-layout/pkg/resp"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -52,7 +52,7 @@ func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
 
 func NoAuth(log *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		log.WithGinContext(ctx).Info("建立请求")
+		log.WithContext(ctx).Info("建立请求")
 		ctx.Next()
 	}
 }
@@ -62,7 +62,7 @@ func StrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
 		if tokenString == "" {
-			log.WithGinContext(ctx).Warn("请求未携带token，无权限访问", zap.Any("data", map[string]interface{}{
+			log.WithContext(ctx).Warn("请求未携带token，无权限访问", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
@@ -74,7 +74,7 @@ func StrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(tokenString)
 		if err != nil {
-			log.WithGinContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
+			log.WithContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
@@ -100,7 +100,7 @@ func NoStrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
 			tokenString = ctx.Query("accessToken")
 		}
 		if tokenString == "" {
-			log.WithGinContext(ctx).Info("建立请求")
+			log.WithContext(ctx).Info("建立请求")
 			ctx.Next()
 			return
 		}
@@ -108,7 +108,7 @@ func NoStrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(tokenString)
 		if err != nil {
-			log.WithGinContext(ctx).Info("建立请求")
+			log.WithContext(ctx).Info("建立请求")
 			ctx.Next()
 			return
 		}
@@ -125,8 +125,8 @@ func recoveryLoggerFunc(ctx *gin.Context, logger *log.Logger) {
 		return
 	}
 	userInfo := ctx.MustGet("claims").(*MyCustomClaims)
-	logger.NewGinContext(ctx, zap.Int64("UserId", userInfo.UserId))
-	logger.WithGinContext(ctx).Info("建立请求")
+	logger.NewContext(ctx, zap.Int64("UserId", userInfo.UserId))
+	logger.WithContext(ctx).Info("建立请求")
 
 	// 统计
 }

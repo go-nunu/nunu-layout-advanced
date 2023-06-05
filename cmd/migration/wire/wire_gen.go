@@ -7,8 +7,8 @@
 package wire
 
 import (
-	"github.com/go-nunu/nunu-layout/internal/database"
-	"github.com/go-nunu/nunu-layout/pkg/db"
+	"github.com/go-nunu/nunu-layout/internal/dao"
+	"github.com/go-nunu/nunu-layout/internal/migration"
 	"github.com/go-nunu/nunu-layout/pkg/log"
 	"github.com/spf13/viper"
 )
@@ -16,9 +16,9 @@ import (
 // Injectors from wire.go:
 
 // wire.go 初始化模块
-func NewApp(viperViper *viper.Viper, logger *log.Logger) (*database.Migrate, func(), error) {
-	gormDB := db.NewDB(viperViper)
-	migrate := database.NewMigrate(gormDB, logger)
+func NewApp(viperViper *viper.Viper, logger *log.Logger) (*migration.Migrate, func(), error) {
+	db := dao.NewDB(viperViper)
+	migrate := migration.NewMigrate(db, logger)
 	return migrate, func() {
 	}, nil
 }
