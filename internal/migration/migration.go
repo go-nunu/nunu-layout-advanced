@@ -1,4 +1,4 @@
-package database
+package migration
 
 import (
 	"github.com/go-nunu/nunu-layout/internal/model"
@@ -19,5 +19,5 @@ func NewMigrate(db *gorm.DB, log *log.Logger) *Migrate {
 }
 func (m *Migrate) Run() {
 	m.db.AutoMigrate(&model.User{})
-	m.log.Logger.Info("AutoMigrate end")
+	m.log.Info("AutoMigrate end")
 }

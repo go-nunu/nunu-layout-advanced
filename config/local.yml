@@ -9,10 +9,10 @@ security:
     key: 1234
 data:
   mysql:
-    dns: root:123456@tcp(127.0.0.1:3306)/gin-db?charset=utf8mb4&parseTime=True&loc=Local
+    user: root:123456@tcp(127.0.0.1:3380)/user?charset=utf8mb4&parseTime=True&loc=Local
   redis:
     addr: 127.0.0.1:6350
-    password: "123456"
+    password: ""
     db: 0
     read_timeout: 0.2s
     write_timeout: 0.2s

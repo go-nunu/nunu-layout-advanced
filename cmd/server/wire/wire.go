@@ -14,9 +14,8 @@ import (
 // wire.go 初始化模块
 func NewApp(*viper.Viper, *log.Logger) (*gin.Engine, func(), error) {
 	panic(wire.Build(
-		provider.DBSet,
 		provider.ServerSet,
-		provider.RepositorySet,
+		provider.DaoSet,
 		provider.ServiceSet,
 		provider.HandlerSet,
 		provider.SonyflakeSet,
