@@ -5,8 +5,8 @@ package wire
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout/internal/provider"
-	"github.com/go-nunu/nunu-layout/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/internal/provider"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 )

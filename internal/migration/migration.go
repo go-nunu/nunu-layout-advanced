@@ -1,8 +1,8 @@
 package migration
 
 import (
-	"github.com/go-nunu/nunu-layout/internal/model"
-	"github.com/go-nunu/nunu-layout/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/internal/model"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"gorm.io/gorm"
 )
 

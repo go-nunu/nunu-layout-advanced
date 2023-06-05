@@ -3,8 +3,7 @@ package dao
 import (
 	"context"
 	"fmt"
-	"github.com/go-nunu/nunu-layout/pkg/log"
-	"github.com/go-redis/redis/v8"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
