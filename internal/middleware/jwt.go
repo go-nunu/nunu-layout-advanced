@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"net/http"

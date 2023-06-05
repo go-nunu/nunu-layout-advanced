@@ -16,5 +16,4 @@ func main() {
 	}
 	app.Run()
 	defer cleanup()
-
 }

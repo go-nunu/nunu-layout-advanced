@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
@@ -13,7 +12,7 @@ func NewServerHTTP(
 	log *log.Logger,
 	jwt *middleware.JWT,
 	userHandler *handler.UserHandler,
-) (*gin.Engine, func()) {
+) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(
@@ -45,7 +44,5 @@ func NewServerHTTP(
 		noStrictAuthRouter.POST("/user", userHandler.CreateUser)
 	}
 
-	return r, func() {
-		fmt.Println(6666)
-	}
+	return r
 }
