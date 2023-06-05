@@ -2,7 +2,9 @@
 
 [简体中文介绍](https://github.com/go-nunu/nunu-layout-advanced/blob/main/README_zh.md)
 
-Nunu is an application scaffold based on Golang. Its name comes from the character Nunu in League of Legends, who is a little boy riding on the shoulder of a snowman. Like Nunu, Go-Nunu also stands on the shoulders of giants, and it is composed of various third-party libraries, including gin, gorm, wire, viper, zap, golang-jwt, go-redis, testify, sonyflake, tableflip, go-survey, cobra, etc. These libraries are very popular in the Golang ecosystem, and their combination can help you quickly build an efficient and reliable application.
+Nunu is an application scaffold based on Golang. Its name comes from the character Nunu in League of Legends, who is a little boy riding on the shoulder of a snowman. Like Nunu, Go-Nunu also stands on the shoulders of giants, and it is composed of various third-party libraries, including gin, gorm, wire, viper, zap, golang-jwt, go-redis, testify, sonyflake, go-survey, cobra, etc. These libraries are very popular in the Golang ecosystem, and their combination can help you quickly build an efficient and reliable application.
+
+![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/banner.png)
 
 ## Features
 
@@ -15,7 +17,6 @@ Nunu is an application scaffold based on Golang. Its name comes from the charact
 - **Go-redis**: A Golang Redis client library.
 - **Testify**: A Golang testing toolkit that provides assertions and mocking.
 - **Sonyflake**: A Golang distributed unique ID generator library.
-- **Tableflip**: A Golang zero-downtime upgrade library.
 - **robfig-cron**: A great Crontab library.
 - More...
 ## Features

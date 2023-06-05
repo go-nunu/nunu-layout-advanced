@@ -1,7 +1,9 @@
 # Nunu - 一个优雅的 Golang 脚手架
 [英文介绍](https://github.com/go-nunu/nunu-layout-advanced/blob/main/README.md)
 
-Nunu是一个基于Golang的应用脚手架，它的名字来自于英雄联盟中的角色 努努，努努是一个骑在雪怪肩膀上的小男孩，和努努一样，Go-Nunu也是站在巨人的肩膀上，它是由各种第三方库组合而成的，包括gin、gorm、wire、viper、zap、golang-jwt、go-redis、testify、sonyflake、tableflip、go-survey、cobra等。这些库都是Golang生态中非常流行的库，它们的组合可以帮助你快速构建一个高效、可靠的应用程序。
+Nunu是一个基于Golang的应用脚手架，它的名字来自于英雄联盟中的角色 努努，努努是一个骑在雪怪肩膀上的小男孩，和努努一样，Go-Nunu也是站在巨人的肩膀上，它是由各种第三方库组合而成的，包括gin、gorm、wire、viper、zap、golang-jwt、go-redis、testify、sonyflake、go-survey、cobra等。这些库都是Golang生态中非常流行的库，它们的组合可以帮助你快速构建一个高效、可靠的应用程序。
+
+![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/banner.png)
 
 ## 功能
 
@@ -14,7 +16,6 @@ Nunu是一个基于Golang的应用脚手架，它的名字来自于英雄联盟�
 - **Go-redis**: 一个 Golang Redis 客户端库。
 - **Testify**: 一个 Golang 测试工具包，提供断言和模拟。
 - **Sonyflake**: 一个 Golang 分布式唯一 ID 生成器库。
-- **Tableflip**: 一个 Golang 零停机升级库。
 - **robfig-cron**: 一个很棒的Crontab库。
 - More...
 ## 特性
