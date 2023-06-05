@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
+	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

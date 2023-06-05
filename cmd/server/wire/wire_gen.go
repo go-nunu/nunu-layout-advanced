@@ -32,8 +32,7 @@ func NewApp(viperViper *viper.Viper, logger *log.Logger) (*gin.Engine, func(), e
 	userDao := dao.NewUserDao(daoDao)
 	userService := service.NewUserService(serviceService, userDao)
 	userHandler := handler.NewUserHandler(handlerHandler, userService)
-	engine, cleanup := server.NewServerHTTP(logger, jwt, userHandler)
+	engine := server.NewServerHTTP(logger, jwt, userHandler)
 	return engine, func() {
-		cleanup()
 	}, nil
 }
