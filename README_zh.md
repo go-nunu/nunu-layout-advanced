@@ -35,7 +35,7 @@ Nunu是一个基于Golang的应用脚手架，它的名字来自于英雄联盟�
 你可以通过以下命令来安装Nunu：
 
 ```bash
-go install github.com/go-nunu/nunu
+go install github.com/go-nunu/nunu@latest
 ```
 
 ## 使用
