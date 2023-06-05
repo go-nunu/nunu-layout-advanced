@@ -36,7 +36,7 @@ To use Nunu, you need to install the following software on your system:
 You can install Nunu with the following command:
 
 ```bash
-go install github.com/go-nunu/nunu
+go install github.com/go-nunu/nunu@latest
 ```
 
 ## Usage
