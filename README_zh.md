@@ -1,84 +1,37 @@
-# Nunu - 一个优雅的 Golang 脚手架
-[英文介绍](https://github.com/go-nunu/nunu-layout-advanced/blob/main/README.md)
+# Nunu
+[英文介绍](https://github.com/go-nunu/nunu/blob/main/README.md)
 
-Nunu是一个基于Golang的应用脚手架，它的名字来自于英雄联盟中的角色，努努是一个骑在雪怪肩膀上的小男孩，和努努一样，该项目是站在巨人的肩膀上，它是由各种第三方库组合而成的，包括gin、gorm、wire、viper、zap、golang-jwt、go-redis、testify、sonyflake、go-survey、cobra等。这些库都是Golang生态中非常流行的库，它们的组合可以帮助你快速构建一个高效、可靠的应用程序。
+Nunu是一个基于Golang的应用脚手架，它的名字来自于英雄联盟中的游戏角色，一个骑在雪怪肩膀上的小男孩，和努努一样，该项目也是站在巨人的肩膀上，它是由各种第三方库组合而成的，包括gin、gorm、wire、viper、zap、golang-jwt、go-redis、testify、sonyflake、go-survey、cobra等。这些库都是Golang生态中非常流行的库，它们的组合可以帮助你快速构建一个高效、可靠的应用程序。
 
 ![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/banner.png)
 
-## 功能
 
-- **Gin**: 一个快速和轻量级的 Golang HTTP web 框架。
-- **Gorm**: 一个强大的 Golang ORM 库，支持多种数据库。
-- **Wire**: 一个 Golang 编译时依赖注入框架。
-- **Viper**: 一个 Golang 配置管理库，支持多种文件格式。
-- **Zap**: 一个快速和结构化的 Golang 日志库。
-- **Golang-jwt**: 一个 Golang JWT 认证库。
-- **Go-redis**: 一个 Golang Redis 客户端库。
-- **Testify**: 一个 Golang 测试工具包，提供断言和模拟。
-- **Sonyflake**: 一个 Golang 分布式唯一 ID 生成器库。
-- **robfig-cron**: 一个很棒的Crontab库。
+## 功能
+- **Gin**: https://github.com/gin-gonic/gin
+- **Gorm**: https://github.com/go-gorm/gorm
+- **Wire**: https://github.com/google/wire
+- **Viper**: https://github.com/spf13/viper
+- **Zap**: https://github.com/uber-go/zap
+- **Golang-jwt**: https://github.com/golang-jwt/jwt
+- **Go-redis**: https://github.com/go-redis/redis
+- **Testify**: https://github.com/stretchr/testify
+- **Sonyflake**: https://github.com/sony/sonyflake
+- **robfig-cron**: https://github.com/robfig/cron
 - More...
 ## 特性
-* **易于使用和定制**：Nunu提供了一个简单直观的API，用于构建Web应用程序。您可以轻松定制应用程序以满足特定需求。
+* **超低学习成本和定制**：Nunu封装了Gopher最熟悉的一些流行库。您可以轻松定制应用程序以满足特定需求。
 * **高性能和可扩展性**：Nunu旨在具有高性能和可扩展性。它使用最新的技术和最佳实践，确保您的应用程序可以处理高流量和大量数据。
-* **安全可靠**：Nunu非常注重安全性。它提供了内置的身份验证、授权和加密支持。它还使用可靠的第三方库，确保您的应用程序安全可靠。
+* **安全可靠**：Nunu使用了稳定可靠的第三方库，确保您的应用程序安全可靠。
 * **模块化和可扩展**：Nunu旨在具有模块化和可扩展性。您可以通过使用第三方库或编写自己的模块轻松添加新功能和功能。
 * **文档完善和测试完备**：Nunu文档完善，测试完备。它提供了全面的文档和示例，帮助您快速入门。它还包括一套测试套件，确保您的应用程序按预期工作。
-## 要求
-要使用Nunu，您需要在系统上安装以下软件：
 
-* Golang 1.16或更高版本
-* MySQL5.7或更高版本(可选)
-* Redis（可选）
-## 安装
-
-你可以通过以下命令来安装Nunu：
-
-```bash
-go install github.com/go-nunu/nunu@latest
-```
-
-## 使用
-
-使用Nunu非常简单，你只需要按照以下步骤即可：
-
-1. 创建一个新的项目
-
-```bash
-nunu new my_project
-```
-
-2. 进入项目目录
-
-```bash
-cd my_project
-```
-
-3. 运行项目
-
-```bash
-nunu run
-```
-
-4. 在浏览器中打开 http://localhost:8000/ ，你将看到一个欢迎页面。
+## 预览
+![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/iterm.png)
 
 ## 目录结构
-
-Nunu的目录结构如下：
-
 ```
 .
 ├── cmd
-│   ├── job
-│   │   ├── wire
-│   │   │   ├── wire.go
-│   │   │   └── wire_gen.go
-│   │   └── main.go
-│   ├── migration
-│   │   ├── wire
-│   │   │   ├── wire.go
-│   │   │   └── wire_gen.go
-│   │   └── main.go
 │   └── server
 │       ├── wire
 │       │   ├── wire.go
@@ -87,72 +40,132 @@ Nunu的目录结构如下：
 ├── config
 │   ├── local.yml
 │   └── prod.yml
-├── deploy
-│   └── Dockerfile
 ├── internal
-│   ├── database
-│   │   └── migration.go
-│   ├── handler
+│   ├── dao
+│   │   ├── dao.go
 │   │   └── user.go
-│   ├── job
-│   │   └── job.go
+│   ├── handler
+│   │   ├── handler.go
+│   │   └── user.go
 │   ├── middleware
-│   │   ├── cors.go
-│   │   ├── jwt.go
-│   │   ├── log.go
-│   │   └── sign.go
+│   │   └── cors.go
 │   ├── model
 │   │   └── user.go
 │   ├── provider
 │   │   └── provider.go
-│   ├── dao
-│   │   └── user.go
 │   ├── server
 │   │   └── http.go
 │   └── service
-│       ├── user.go
-│       └── user_test.go
+│       ├── service.go
+│       └── user.go
 ├── pkg
 │   ├── config
 │   │   └── config.go
-│   ├── db
-│   │   └── db.go
-│   ├── log
-│   │   ├── storage
-│   │   │   └── logs
-│   │   │       └── server.log
-│   │   ├── log.go
-│   │   └── log_test.go
-│   ├── md5
-│   │   └── md5.go
-│   ├── rdb
-│   │   └── redis.go
-│   ├── resp
-│   │   └── resp.go
-│   ├── sonyflake
-│   │   └── sonyflake.go
-│   └── uuid
-│       └── uuid.go
-├── storage
-│   └── logs
-│       └── server.log
-├── test
-│   └── server
-│       └── handler
-│           ├── storage
-│           │   └── logs
-│           │       └── server.log
-│           └── user_test.go
-├── web
-│   └── index.html
+│   ├── helper
+│   │   ├── md5
+│   │   │   └── md5.go
+│   │   ├── resp
+│   │   │   └── resp.go
+│   │   ├── sonyflake
+│   │   │   └── sonyflake.go
+│   │   └── uuid
+│   │       └── uuid.go
+│   ├── http
+│   │   └── http.go
+│   └── log
+│       └── log.go
 ├── LICENSE
 ├── README.md
 ├── README_zh.md
 ├── go.mod
 └── go.sum
-
-
 ```
 
+这是一个经典的Golang 项目的目录结构，包含以下目录：
+
+- `cmd`：存放命令行应用的代码，例如 `main.go`。
+- `config`：存放配置文件，例如 `config.yaml`。
+- `internal`：存放项目内部的代码，不对外暴露。
+  - `dao`：存放数据访问对象（Data Access Object）的代码。
+  - `handler`：存放 HTTP 请求处理器的代码。
+  - `middleware`：存放 HTTP 中间件的代码。
+  - `model`：存放数据模型的代码。
+  - `provider`：存放依赖注入的代码。
+  - `server`：存放 HTTP 服务器的代码。
+  - `service`：存放业务逻辑的代码。
+- `pkg`：存放可重用的代码，对外暴露。
+  - `config`：存放读取配置文件的代码。
+  - `helper`：存放辅助函数的代码。
+  - `http`：存放 HTTP 相关的代码。
+  - `log`：存放日志相关的代码。
+
+## 要求
+要使用Nunu，您需要在系统上安装以下软件：
+
+* Golang 1.16或更高版本
+* MySQL5.7或更高版本(可选)
+* Redis（可选）
+
+
+## 安装
+
+您可以通过以下命令安装Nunu：
+
+```bash
+go install github.com/go-nunu/nunu@latest
+```
+
+## 使用
+
+### 创建新项目
+
+您可以使用以下命令创建一个新的Golang项目：
+
+```bash
+nunu new projectName
+```
+
+此命令将创建一个名为`projectName`的目录，并在其中生成一个优雅的Golang项目结构。
+
+### 创建组件
+
+您可以使用以下命令为项目创建handler、service和dao等组件：
+
+```bash
+nunu create handler user
+nunu create service user
+nunu create dao user
+```
+或
+```
+nunu create hsd user
+```
+这些命令将分别创建一个名为`UserHandler`、`UserService`和`UserDao`的组件，并将它们放置在正确的目录中。
+
+### 启动项目
+
+您可以使用以下命令快速启动项目：
+
+```bash
+nunu run
+```
+
+此命令将启动您的Golang项目，并支持文件更新热重启。
+
+### 编译wire.go
+
+您可以使用以下命令快速编译`wire.go`：
+
+```bash
+nunu wire
+```
+
+此命令将编译您的`wire.go`文件，并生成所需的依赖项。
+
+## 贡献
+
+如果您发现任何问题或有任何改进意见，请随时提出问题或提交拉取请求。我们非常欢迎您的贡献！
+
 ## 许可证
-Nunu根据MIT许可证获得许可。有关更多信息，请参见LICENSE文件。
+
+Nunu是根据MIT许可证发布的。有关更多信息，请参见[LICENSE](LICENSE)文件。

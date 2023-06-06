@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func SignMiddleware(log *log.Logger, conf *viper.Viper) gin.HandlerFunc {
+func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		timestamp, ok := ctx.Request.Header["Timestamp"]
 		if !ok || len(timestamp) == 0 {

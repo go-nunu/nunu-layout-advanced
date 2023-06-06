@@ -50,19 +50,12 @@ func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
 	}
 }
 
-func NoAuth(log *log.Logger) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		log.WithContext(ctx).Info("建立请求")
-		ctx.Next()
-	}
-}
-
 // StrictAuth 严格权限
-func StrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
+func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
 		if tokenString == "" {
-			log.WithContext(ctx).Warn("请求未携带token，无权限访问", zap.Any("data", map[string]interface{}{
+			logger.WithContext(ctx).Warn("请求未携带token，无权限访问", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
@@ -74,7 +67,7 @@ func StrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(tokenString)
 		if err != nil {
-			log.WithContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
+			logger.WithContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
@@ -85,12 +78,12 @@ func StrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
 
 		// 继续交由下一个路由处理,并将解析出的信息传递下去
 		ctx.Set("claims", claims)
-		recoveryLoggerFunc(ctx, log)
+		recoveryLoggerFunc(ctx, logger)
 		ctx.Next()
 	}
 }
 
-func NoStrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
+func NoStrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
 		if tokenString == "" {
@@ -100,7 +93,6 @@ func NoStrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
 			tokenString = ctx.Query("accessToken")
 		}
 		if tokenString == "" {
-			log.WithContext(ctx).Info("建立请求")
 			ctx.Next()
 			return
 		}
@@ -108,25 +100,18 @@ func NoStrictAuth(j *JWT, log *log.Logger) gin.HandlerFunc {
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(tokenString)
 		if err != nil {
-			log.WithContext(ctx).Info("建立请求")
 			ctx.Next()
 			return
 		}
 
 		// 继续交由下一个路由处理,并将解析出的信息传递下去
 		ctx.Set("claims", claims)
-		recoveryLoggerFunc(ctx, log)
+		recoveryLoggerFunc(ctx, logger)
 		ctx.Next()
 	}
 }
 
 func recoveryLoggerFunc(ctx *gin.Context, logger *log.Logger) {
-	if ctx.Request.URL.Path == "/cos/object" && ctx.Request.Method == "POST" {
-		return
-	}
 	userInfo := ctx.MustGet("claims").(*MyCustomClaims)
 	logger.NewContext(ctx, zap.Int64("UserId", userInfo.UserId))
-	logger.WithContext(ctx).Info("建立请求")
-
-	// 统计
 }
