@@ -9,39 +9,40 @@ import (
 )
 
 func NewServerHTTP(
-	log *log.Logger,
+	logger *log.Logger,
 	jwt *middleware.JWT,
 	userHandler *handler.UserHandler,
 ) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+
 	r.Use(
-		middleware.RequestLogMiddleware(log),
 		middleware.CORSMiddleware(),
-		middleware.NoAuth(log),
-		middleware.ResponseLogMiddleware(log),
+		middleware.ResponseLogMiddleware(logger),
 		//middleware.SignMiddleware(log),
 	)
-	r.GET("/", func(ctx *gin.Context) {
-		resp.HandleSuccess(ctx, map[string]interface{}{
-			"say": "Hi Nunu!",
-		})
-	})
 
-	noAuthRouter := r.Use(middleware.NoAuth(log))
+	// 无权限路由
+	noAuthRouter := r.Group("/").Use(middleware.RequestLogMiddleware(logger))
 	{
 		noAuthRouter.GET("/user", userHandler.GetUserById)
-
-	}
-	// 严格权限路由
-	strictAuthRouter := r.Use(middleware.StrictAuth(jwt, log))
-	{
-		strictAuthRouter.PUT("/user", userHandler.UpdateUser)
+		noAuthRouter.GET("/", func(ctx *gin.Context) {
+			logger.WithContext(ctx).Info("hello")
+			resp.HandleSuccess(ctx, map[string]interface{}{
+				"say": "Hi Nunu!",
+			})
+		})
 	}
 	// 非严格权限路由
-	noStrictAuthRouter := r.Use(middleware.NoStrictAuth(jwt, log))
+	noStrictAuthRouter := r.Group("/").Use(middleware.NoStrictAuth(jwt, logger), middleware.RequestLogMiddleware(logger))
 	{
 		noStrictAuthRouter.POST("/user", userHandler.CreateUser)
+	}
+
+	// 严格权限路由
+	strictAuthRouter := r.Group("/").Use(middleware.StrictAuth(jwt, logger), middleware.RequestLogMiddleware(logger))
+	{
+		strictAuthRouter.PUT("/user", userHandler.UpdateUser)
 	}
 
 	return r

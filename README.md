@@ -1,86 +1,39 @@
-# Nunu - An Elegant Golang Scaffold 
+# Nunu
+[中文介绍](https://github.com/go-nunu/nunu-layout-advanced/blob/main/README_zh.md)
 
-[简体中文介绍](https://github.com/go-nunu/nunu-layout-advanced/blob/main/README_zh.md)
 
 Nunu is an application scaffold based on Golang. Its name comes from the character Nunu in League of Legends, who is a little boy riding on the shoulder of a snowman. Like Nunu, This Project also stands on the shoulders of giants, and it is composed of various third-party libraries, including gin, gorm, wire, viper, zap, golang-jwt, go-redis, testify, sonyflake, go-survey, cobra, etc. These libraries are very popular in the Golang ecosystem, and their combination can help you quickly build an efficient and reliable application.
 
 ![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/banner.png)
 
+
 ## Features
 
-- **Gin**: A fast and lightweight Golang HTTP web framework.
-- **Gorm**: A powerful Golang ORM library that supports multiple databases.
-- **Wire**: A Golang compile-time dependency injection framework.
-- **Viper**: A Golang configuration management library that supports multiple file formats.
-- **Zap**: A fast and structured Golang logging library.
-- **Golang-jwt**: A Golang JWT authentication library.
-- **Go-redis**: A Golang Redis client library.
-- **Testify**: A Golang testing toolkit that provides assertions and mocking.
-- **Sonyflake**: A Golang distributed unique ID generator library.
-- **robfig-cron**: A great Crontab library.
+- **Gin**: https://github.com/gin-gonic/gin
+- **Gorm**: https://github.com/go-gorm/gorm
+- **Wire**: https://github.com/google/wire
+- **Viper**: https://github.com/spf13/viper
+- **Zap**: https://github.com/uber-go/zap
+- **Golang-jwt**: https://github.com/golang-jwt/jwt
+- **Go-redis**: https://github.com/go-redis/redis
+- **Testify**: https://github.com/stretchr/testify
+- **Sonyflake**: https://github.com/sony/sonyflake
+- **robfig-cron**: https://github.com/robfig/cron
 - More...
 ## Features
-* **Easy to use and customize**: Nunu provides a simple and intuitive API for building web applications. You can easily customize the application to meet specific needs.
-* **High performance and scalability**: Nunu is designed to be high-performance and scalable. It uses the latest technologies and best practices to ensure that your application can handle high traffic and large amounts of data.
-* **Secure and reliable**: Nunu places great emphasis on security. It provides built-in authentication, authorization, and encryption support. It also uses reliable third-party libraries to ensure that your application is secure and reliable.
+* **Low learning cost and customization**: Nunu encapsulates some popular libraries that Gopher is most familiar with. You can easily customize your application to meet specific needs.
+* **High performance and scalability**: Nunu aims to have high performance and scalability. It uses the latest technology and best practices to ensure that your application can handle high traffic and large amounts of data.
+* **Secure and reliable**: Nunu uses stable and reliable third-party libraries to ensure the security and reliability of your application.
 * **Modular and extensible**: Nunu is designed to be modular and extensible. You can easily add new features and functionality by using third-party libraries or writing your own modules.
-* **Well-documented and thoroughly tested**: Nunu is well-documented and thoroughly tested. It provides comprehensive documentation and examples to help you get started quickly. It also includes a suite of tests to ensure that your application works as expected.
-## Requirements
-To use Nunu, you need to install the following software on your system:
+* **Complete documentation and testing**: Nunu has complete documentation and testing. It provides comprehensive documentation and examples to help you get started quickly. It also includes a set of test suites to ensure that your application works as expected.
 
-* Golang 1.16 or higher
-* MySQL 5.7 or higher (optional)
-* Redis (optional)
-## Installation
-
-You can install Nunu with the following command:
-
-```bash
-go install github.com/go-nunu/nunu@latest
-```
-
-## Usage
-
-Using Nunu is very simple, you just need to follow these steps:
-
-1. Create a new project
-
-```bash
-nunu new my_project
-```
-
-2. Enter the project directory
-
-```bash
-cd my_project
-```
-
-3. Run the project
-
-```bash
-nunu run
-```
-
-4. Open http://localhost:8000/ in your browser, and you will see a welcome page.
+## Preview
+![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/iterm.png)
 
 ## Directory Structure
-
-The directory structure of Nunu is as follows:
-
-
 ```
 .
 ├── cmd
-│   ├── job
-│   │   ├── wire
-│   │   │   ├── wire.go
-│   │   │   └── wire_gen.go
-│   │   └── main.go
-│   ├── migration
-│   │   ├── wire
-│   │   │   ├── wire.go
-│   │   │   └── wire_gen.go
-│   │   └── main.go
 │   └── server
 │       ├── wire
 │       │   ├── wire.go
@@ -89,72 +42,133 @@ The directory structure of Nunu is as follows:
 ├── config
 │   ├── local.yml
 │   └── prod.yml
-├── deploy
-│   └── Dockerfile
 ├── internal
-│   ├── database
-│   │   └── migration.go
-│   ├── handler
+│   ├── dao
+│   │   ├── dao.go
 │   │   └── user.go
-│   ├── job
-│   │   └── job.go
+│   ├── handler
+│   │   ├── handler.go
+│   │   └── user.go
 │   ├── middleware
-│   │   ├── cors.go
-│   │   ├── jwt.go
-│   │   ├── log.go
-│   │   └── sign.go
+│   │   └── cors.go
 │   ├── model
 │   │   └── user.go
 │   ├── provider
 │   │   └── provider.go
-│   ├── dao
-│   │   └── user.go
 │   ├── server
 │   │   └── http.go
 │   └── service
-│       ├── user.go
-│       └── user_test.go
+│       ├── service.go
+│       └── user.go
 ├── pkg
 │   ├── config
 │   │   └── config.go
-│   ├── db
-│   │   └── db.go
-│   ├── log
-│   │   ├── storage
-│   │   │   └── logs
-│   │   │       └── server.log
-│   │   ├── log.go
-│   │   └── log_test.go
-│   ├── md5
-│   │   └── md5.go
-│   ├── rdb
-│   │   └── redis.go
-│   ├── resp
-│   │   └── resp.go
-│   ├── sonyflake
-│   │   └── sonyflake.go
-│   └── uuid
-│       └── uuid.go
-├── storage
-│   └── logs
-│       └── server.log
-├── test
-│   └── server
-│       └── handler
-│           ├── storage
-│           │   └── logs
-│           │       └── server.log
-│           └── user_test.go
-├── web
-│   └── index.html
+│   ├── helper
+│   │   ├── md5
+│   │   │   └── md5.go
+│   │   ├── resp
+│   │   │   └── resp.go
+│   │   ├── sonyflake
+│   │   │   └── sonyflake.go
+│   │   └── uuid
+│   │       └── uuid.go
+│   ├── http
+│   │   └── http.go
+│   └── log
+│       └── log.go
 ├── LICENSE
 ├── README.md
 ├── README_zh.md
 ├── go.mod
 └── go.sum
-
-
 ```
 
+
+This is the directory structure of a classic Golang project, which includes the following directories:
+
+- `cmd`: Contains the code for command-line applications, such as `main.go`.
+- `config`: Contains configuration files, such as `config.yaml`.
+- `internal`: Contains internal code that is not exposed externally.
+    - `dao`: Contains the code for Data Access Objects (DAOs).
+    - `handler`: Contains the code for HTTP request handlers.
+    - `middleware`: Contains the code for HTTP middleware.
+    - `model`: Contains the code for data models.
+    - `provider`: Contains the code for dependency injection.
+    - `server`: Contains the code for HTTP servers.
+    - `service`: Contains the code for business logic.
+- `pkg`: Contains reusable code that is exposed externally.
+    - `config`: Contains the code for reading configuration files.
+    - `helper`: Contains the code for helper functions.
+    - `http`: Contains HTTP-related code.
+    - `log`: Contains code related to logging.
+
+## Requirements
+To use Nunu, you need to install the following software on your system:
+
+* Golang 1.16 or higher
+* MySQL 5.7 or higher (optional)
+* Redis (optional)
+
+## Installation
+
+You can install Nunu using the following command:
+
+```bash
+go install github.com/go-nunu/nunu@latest
+```
+
+## Usage
+
+### Creating a New Project
+
+You can create a new Golang project using the following command:
+
+```bash
+nunu new projectName
+```
+
+This command will create a directory named `projectName` and generate an elegant Golang project structure within it.
+
+### Creating Components
+
+You can create handlers, services, and daos for your project using the following commands:
+
+```bash
+nunu create handler user
+nunu create service user
+nunu create dao user
+```
+or
+```
+nunu create hsd user
+```
+
+These commands will create components named `UserHandler`, `UserService`, and `UserDao`, respectively, and place them in the correct directories.
+
+### Starting the Project
+
+You can quickly start your project using the following command:
+
+```bash
+nunu run
+```
+
+This command will start your Golang project and support file update hot reload.
+
+### Compiling wire.go
+
+You can quickly compile your `wire.go` file using the following command:
+
+```bash
+nunu wire
+```
+
+This command will compile your `wire.go` file and generate the required dependencies.
+
+## Contributing
+
+If you find any issues or have any improvement suggestions, please feel free to raise an issue or submit a pull request. We welcome your contributions!
+
 ## License
-Nunu is licensed under the MIT License. For more information, see the LICENSE file.
+
+Nunu is released under the MIT license. See [LICENSE](LICENSE) for more information.

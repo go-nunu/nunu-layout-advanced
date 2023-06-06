@@ -1,4 +1,4 @@
-env: prod
+env: local
 http:
   port: 8000
 security:
@@ -9,19 +9,18 @@ security:
     key: 1234
 data:
   mysql:
-    dns: root:123456@tcp(127.0.0.1:3306)/gin-db?charset=utf8mb4&parseTime=True&loc=Local
+    user: root:123456@tcp(127.0.0.1:3380)/user?charset=utf8mb4&parseTime=True&loc=Local
   redis:
     addr: 127.0.0.1:6350
-    password: "123456"
+    password: ""
     db: 0
     read_timeout: 0.2s
     write_timeout: 0.2s
 
 log:
-  # log配置，stdout在debug级别才会开启
-  # 生产环境采用json结构化日志，方便elk采集
-  log_level: "debug"           # 高级别会过滤掉低级别的日志，debug<info<warn<error<fatal<panic
-  log_file_name: "./storage/logs/server.log"  #zap 业务日志路径
+  log_level: info
+  encoding: json           # json or console
+  log_file_name: "./storage/logs/server.log"
   max_backups: 30              # 日志文件最多保存多少个备份
   max_age: 7                   #  文件最多保存多少天
   max_size: 1024               #  每个日志文件保存的最大尺寸 单位：M

@@ -12,13 +12,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 )
 
-var jsonHeaders = map[string]string{
-	"Content-Type":  "application/json",
-	"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJ1c2VyU2lkIjoiOHpsdGxQRzhXSCIsIm5pY2tuYW1lIjoi55CD55CDIiwidXNlcklkIjowfSwiZXhwIjoxNjg3NzcwMzYzLCJqdGkiOiI4emx0bFBHOFdIIiwiaXNzIjoiaHR0cHM6Ly90ZWh1Yi5jb20vYXBpIiwibmJmIjoxNjcyMjE3NzYzLCJzdWIiOiI4emx0bFBHOFdIIn0.G0sSUzj3GBANqj6dU7rSMsr44SARgYwH1ERwKUCaxsM",
-}
 var headers = map[string]string{
 	"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJ1c2VyU2lkIjoiOHpsdGxQRzhXSCIsIm5pY2tuYW1lIjoi55CD55CDIiwidXNlcklkIjowfSwiZXhwIjoxNjg3NzcwMzYzLCJqdGkiOiI4emx0bFBHOFdIIiwiaXNzIjoiaHR0cHM6Ly90ZWh1Yi5jb20vYXBpIiwibmJmIjoxNjcyMjE3NzYzLCJzdWIiOiI4emx0bFBHOFdIIn0.G0sSUzj3GBANqj6dU7rSMsr44SARgYwH1ERwKUCaxsM",
 }
@@ -54,6 +51,10 @@ func NewRequest(method, path string, header map[string]string, body io.Reader) (
 	for k, v := range header {
 		req.Header.Set(k, v)
 	}
+	if strings.ToUpper(method) != "GET" && body != nil {
+		req.Header.Set("Content-Type", "application/json")
+
+	}
 	w := httptest.NewRecorder()
 	app.ServeHTTP(w, req)
 	response := new(Response)
@@ -64,14 +65,14 @@ func NewRequest(method, path string, header map[string]string, body io.Reader) (
 	return response, nil
 }
 
-func TestGetUserByEmail(t *testing.T) {
+func TestGetUserById(t *testing.T) {
 	response, err := NewRequest("GET",
-		fmt.Sprintf("/user?email=%s", "5303221@gmail.com"),
-		jsonHeaders,
+		fmt.Sprintf("/user?id=%s", "-1"),
+		headers,
 		nil,
 	)
 
-	t.Log("响应结果")
+	t.Log("response")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, response.Code)
 }
