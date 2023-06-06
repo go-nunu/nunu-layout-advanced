@@ -1,10 +1,16 @@
-# Nunu
-[中文介绍](https://github.com/go-nunu/nunu-layout-advanced/blob/main/README_zh.md)
+# Nunu — A CLI tool for building go aplication.
 
+Nunu is an application scaffold based on Golang, named after a game character in League of Legends, a little boy riding on the shoulder of a snow monster. Like Nunu, this project also stands on the shoulders of giants, integrating various popular libraries in the Golang ecosystem. Their combination can help you quickly build an efficient and reliable application.
 
-Nunu is an application scaffold based on Golang. Its name comes from the character Nunu in League of Legends, who is a little boy riding on the shoulder of a snowman. Like Nunu, This Project also stands on the shoulders of giants, and it is composed of various third-party libraries, including gin, gorm, wire, viper, zap, golang-jwt, go-redis, testify, sonyflake, go-survey, cobra, etc. These libraries are very popular in the Golang ecosystem, and their combination can help you quickly build an efficient and reliable application.
+[中文介绍](https://github.com/go-nunu/nunu/blob/main/README_zh.md)
+
 
 ![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/banner.png)
+
+
+
+
+
 
 
 ## Features
@@ -20,6 +26,7 @@ Nunu is an application scaffold based on Golang. Its name comes from the charact
 - **Sonyflake**: https://github.com/sony/sonyflake
 - **robfig-cron**: https://github.com/robfig/cron
 - More...
+
 ## Features
 * **Low learning cost and customization**: Nunu encapsulates some popular libraries that Gopher is most familiar with. You can easily customize your application to meet specific needs.
 * **High performance and scalability**: Nunu aims to have high performance and scalability. It uses the latest technology and best practices to ensure that your application can handle high traffic and large amounts of data.
@@ -27,8 +34,16 @@ Nunu is an application scaffold based on Golang. Its name comes from the charact
 * **Modular and extensible**: Nunu is designed to be modular and extensible. You can easily add new features and functionality by using third-party libraries or writing your own modules.
 * **Complete documentation and testing**: Nunu has complete documentation and testing. It provides comprehensive documentation and examples to help you get started quickly. It also includes a set of test suites to ensure that your application works as expected.
 
-## Preview
-![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/iterm.png)
+## Nunu CLI
+
+![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/screenshot.jpg)
+
+
+## Documentation
+* [Guide](https://github.com/go-nunu/nunu/blob/main/docs/en/guide.md)
+* [Architecture](https://github.com/go-nunu/nunu/blob/main/docs/en/architecture.md)
+* [Tutorial](https://github.com/go-nunu/nunu/blob/main/docs/en/tutorial.md)
+
 
 ## Directory Structure
 ```
@@ -106,10 +121,11 @@ This is the directory structure of a classic Golang project, which includes the 
 To use Nunu, you need to install the following software on your system:
 
 * Golang 1.16 or higher
+* Git
 * MySQL 5.7 or higher (optional)
 * Redis (optional)
 
-## Installation
+### Installation
 
 You can install Nunu using the following command:
 
@@ -117,7 +133,6 @@ You can install Nunu using the following command:
 go install github.com/go-nunu/nunu@latest
 ```
 
-## Usage
 
 ### Creating a New Project
 
@@ -125,6 +140,10 @@ You can create a new Golang project using the following command:
 
 ```bash
 nunu new projectName
+
+// or
+
+nunu new projectName -r https://github.com/go-nunu/nunu-layout-advanced.git
 ```
 
 This command will create a directory named `projectName` and generate an elegant Golang project structure within it.
@@ -137,13 +156,14 @@ You can create handlers, services, and daos for your project using the following
 nunu create handler user
 nunu create service user
 nunu create dao user
+nunu create model user
 ```
 or
 ```
-nunu create hsd user
+nunu create all user
 ```
 
-These commands will create components named `UserHandler`, `UserService`, and `UserDao`, respectively, and place them in the correct directories.
+These commands will create components named `UserHandler`, `UserService`, `UserDao` and `UserModel`, respectively, and place them in the correct directories.
 
 ### Starting the Project
 
