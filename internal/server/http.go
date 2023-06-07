@@ -25,24 +25,27 @@ func NewServerHTTP(
 	// 无权限路由
 	noAuthRouter := r.Group("/").Use(middleware.RequestLogMiddleware(logger))
 	{
-		noAuthRouter.GET("/user", userHandler.GetUserById)
+
 		noAuthRouter.GET("/", func(ctx *gin.Context) {
 			logger.WithContext(ctx).Info("hello")
 			resp.HandleSuccess(ctx, map[string]interface{}{
 				"say": "Hi Nunu!",
 			})
 		})
+
+		noAuthRouter.POST("/user/register", userHandler.Register)
+		noAuthRouter.POST("/user/login", userHandler.Login)
 	}
 	// 非严格权限路由
 	noStrictAuthRouter := r.Group("/").Use(middleware.NoStrictAuth(jwt, logger), middleware.RequestLogMiddleware(logger))
 	{
-		noStrictAuthRouter.POST("/user", userHandler.CreateUser)
+		noStrictAuthRouter.GET("/user", userHandler.GetProfile)
 	}
 
 	// 严格权限路由
 	strictAuthRouter := r.Group("/").Use(middleware.StrictAuth(jwt, logger), middleware.RequestLogMiddleware(logger))
 	{
-		strictAuthRouter.PUT("/user", userHandler.UpdateUser)
+		strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
 	}
 
 	return r

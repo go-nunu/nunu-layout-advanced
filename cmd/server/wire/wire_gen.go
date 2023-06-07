@@ -25,7 +25,7 @@ func NewApp(viperViper *viper.Viper, logger *log.Logger) (*gin.Engine, func(), e
 	jwt := middleware.NewJwt(viperViper)
 	sonyflakeSonyflake := sonyflake.NewSonyflake()
 	handlerHandler := handler.NewHandler(logger, sonyflakeSonyflake)
-	serviceService := service.NewService(logger)
+	serviceService := service.NewService(logger, sonyflakeSonyflake, jwt)
 	db := dao.NewDB(viperViper)
 	client := dao.NewRedis(viperViper)
 	daoDao := dao.NewDao(db, client, logger)
