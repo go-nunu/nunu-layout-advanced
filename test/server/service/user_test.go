@@ -3,12 +3,12 @@ package service
 import (
 	"fmt"
 	"github.com/go-nunu/nunu-layout-advanced/internal/dao"
-	"github.com/go-nunu/nunu-layout-advanced/internal/model"
+	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/sonyflake"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm"
 	"os"
 	"testing"
 )
@@ -25,8 +25,9 @@ func TestMain(m *testing.M) {
 	logger := log.NewLog(conf)
 	db := dao.NewDB(conf)
 	rdb := dao.NewRedis(conf)
-
-	srv := service.NewService(logger)
+	jwt := middleware.NewJwt(conf)
+	sf := sonyflake.NewSonyflake()
+	srv := service.NewService(logger, sf, jwt)
 	repo := dao.NewDao(db, rdb, logger)
 	userDao := dao.NewUserDao(repo)
 	userService = service.NewUserService(srv, userDao)
@@ -37,15 +38,22 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 
 }
-func TestGetUserByEmail(t *testing.T) {
-	_, err := userService.GetUserById(0)
-	assert.Equal(t, err, gorm.ErrRecordNotFound, "they should be equal")
+func TestRegister(t *testing.T) {
+	req := service.RegisterRequest{
+		Username: "user1",
+		Password: "123456",
+		Email:    "user1@mail.com",
+	}
+	err := userService.Register(&req)
+	assert.Equal(t, err, nil, "they should be equal")
 }
 
-func TestCreateUser(t *testing.T) {
-	_, err := userService.CreateUser(&model.User{
-		Username: "test",
-		Email:    "nunu@mail.com",
-	})
-	assert.NotEqual(t, err, nil, "they should be equal")
+func TestLogin(t *testing.T) {
+	req := service.LoginRequest{
+		Username: "user1",
+		Password: "123456",
+	}
+	token, err := userService.Login(&req)
+	assert.Equal(t, err, nil, "they should be equal")
+	t.Log("token", token)
 }

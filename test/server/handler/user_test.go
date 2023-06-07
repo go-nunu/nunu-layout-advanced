@@ -17,7 +17,7 @@ import (
 )
 
 var headers = map[string]string{
-	"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJ1c2VyU2lkIjoiOHpsdGxQRzhXSCIsIm5pY2tuYW1lIjoi55CD55CDIiwidXNlcklkIjowfSwiZXhwIjoxNjg3NzcwMzYzLCJqdGkiOiI4emx0bFBHOFdIIiwiaXNzIjoiaHR0cHM6Ly90ZWh1Yi5jb20vYXBpIiwibmJmIjoxNjcyMjE3NzYzLCJzdWIiOiI4emx0bFBHOFdIIn0.G0sSUzj3GBANqj6dU7rSMsr44SARgYwH1ERwKUCaxsM",
+	"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ5aHM2SGVzZmdGIiwiZXhwIjoxNjkzOTE0ODgwLCJuYmYiOjE2ODYxMzg4ODAsImlhdCI6MTY4NjEzODg4MH0.NnFrZFgc_333a9PXqaoongmIDksNvQoHzgM_IhJM4MQ",
 }
 
 func TestMain(m *testing.M) {
@@ -65,9 +65,9 @@ func NewRequest(method, path string, header map[string]string, body io.Reader) (
 	return response, nil
 }
 
-func TestGetUserById(t *testing.T) {
+func TestGetProfile(t *testing.T) {
 	response, err := NewRequest("GET",
-		fmt.Sprintf("/user?id=%s", "-1"),
+		fmt.Sprintf("/user"),
 		headers,
 		nil,
 	)
@@ -76,13 +76,14 @@ func TestGetUserById(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 1, response.Code)
 }
-func TestCreateUser(t *testing.T) {
+func TestUpdateProfile(t *testing.T) {
 	params, err := json.Marshal(map[string]interface{}{
 		"email":    "5303221@gmail.com",
-		"username": "test",
+		"username": "user1",
+		"nickname": "8888",
 	})
 	assert.Nil(t, err)
-	response, err := NewRequest("POST",
+	response, err := NewRequest("PUT",
 		"/user",
 		headers,
 		bytes.NewBuffer(params),

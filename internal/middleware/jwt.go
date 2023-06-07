@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
@@ -10,29 +9,40 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	"regexp"
+	"time"
 )
 
 type JWT struct {
-	key string
+	key []byte
 }
 type MyCustomClaims struct {
-	UserId int64
+	UserId string
 	jwt.RegisteredClaims
 }
 
 // NewJwt https://pkg.go.dev/github.com/golang-jwt/jwt/v5
 func NewJwt(conf *viper.Viper) *JWT {
-	return &JWT{key: conf.GetString("security.jwt.key")}
+	return &JWT{key: []byte(conf.GetString("security.jwt.key"))}
 }
-func (j *JWT) GenToken() string {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, MyCustomClaims{
-		UserId: 1,
+func (j *JWT) GenToken(userId string, expiresAt time.Time) string {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyCustomClaims{
+		UserId: userId,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expiresAt),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			NotBefore: jwt.NewNumericDate(time.Now()),
+			Issuer:    "",
+			Subject:   "",
+			ID:        "",
+			Audience:  []string{},
+		},
 	})
 
 	// Sign and get the complete encoded token as a string using the key
 	tokenString, err := token.SignedString(j.key)
-
-	fmt.Println(tokenString, err)
+	if err != nil {
+		return ""
+	}
 	return tokenString
 
 }
@@ -40,7 +50,7 @@ func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
 	re, _ := regexp.Compile(`(?i)Bearer `)
 	tokenString = re.ReplaceAllString(tokenString, "")
 	token, err := jwt.ParseWithClaims(tokenString, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("AllYourBase"), nil
+		return j.key, nil
 	})
 
 	if claims, ok := token.Claims.(*MyCustomClaims); ok && token.Valid {
@@ -113,5 +123,5 @@ func NoStrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 
 func recoveryLoggerFunc(ctx *gin.Context, logger *log.Logger) {
 	userInfo := ctx.MustGet("claims").(*MyCustomClaims)
-	logger.NewContext(ctx, zap.Int64("UserId", userInfo.UserId))
+	logger.NewContext(ctx, zap.String("UserId", userInfo.UserId))
 }

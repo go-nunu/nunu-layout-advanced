@@ -2,10 +2,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
-	"go.uber.org/zap"
+	"github.com/pkg/errors"
 	"net/http"
 )
 
@@ -21,46 +20,68 @@ func NewUserHandler(handler *Handler, userService *service.UserService) *UserHan
 	}
 }
 
-func (c *UserHandler) CreateUser(ctx *gin.Context) {
-
-	var params struct {
-		Username string `json:"username" binding:"required,min=2,max=20"`
-		Email    string `json:"email" binding:"required,email"`
-	}
-	if err := ctx.ShouldBind(&params); err != nil {
-		resp.HandleError(ctx, http.StatusBadRequest, 1, err.Error(), nil)
+func (h *UserHandler) Register(ctx *gin.Context) {
+	req := new(service.RegisterRequest)
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
 		return
 	}
 
-	user, err := c.userService.CreateUser(&model.User{
-		Username: params.Username,
-		Email:    params.Email,
+	if err := h.userService.Register(req); err != nil {
+		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
+		return
+	}
+
+	resp.HandleSuccess(ctx, nil)
+}
+
+func (h *UserHandler) Login(ctx *gin.Context) {
+	var req service.LoginRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
+		return
+	}
+
+	token, err := h.userService.Login(&req)
+	if err != nil {
+		resp.HandleError(ctx, http.StatusUnauthorized, 1, err.Error(), nil)
+		return
+	}
+
+	resp.HandleSuccess(ctx, gin.H{
+		"accessToken": token,
 	})
-	c.logger.Info("CreateUser", zap.Any("user", user))
-	if err != nil {
-		resp.HandleError(ctx, http.StatusInternalServerError, 1, err.Error(), nil)
+}
+
+func (h *UserHandler) GetProfile(ctx *gin.Context) {
+	userId := GetUserIdFromCtx(ctx)
+	if userId == "" {
+		resp.HandleError(ctx, http.StatusUnauthorized, 1, "unauthorized", nil)
 		return
 	}
-	resp.HandleSuccess(ctx, user)
-}
-func (c *UserHandler) GetUserById(ctx *gin.Context) {
 
-	var params struct {
-		Id int64 `form:"id" binding:"required"`
-	}
-	if err := ctx.ShouldBind(&params); err != nil {
+	user, err := h.userService.GetProfile(userId)
+	if err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, err.Error(), nil)
 		return
 	}
 
-	user, err := c.userService.GetUserById(params.Id)
-	c.logger.Info("GetUserByID", zap.Any("user", user))
-	if err != nil {
-		resp.HandleError(ctx, http.StatusInternalServerError, 1, err.Error(), nil)
-		return
-	}
 	resp.HandleSuccess(ctx, user)
 }
-func (c *UserHandler) UpdateUser(ctx *gin.Context) {
+
+func (h *UserHandler) UpdateProfile(ctx *gin.Context) {
+	userId := GetUserIdFromCtx(ctx)
+
+	var req service.UpdateProfileRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
+		return
+	}
+
+	if err := h.userService.UpdateProfile(userId, &req); err != nil {
+		resp.HandleError(ctx, http.StatusBadRequest, 1, err.Error(), nil)
+		return
+	}
+
 	resp.HandleSuccess(ctx, nil)
 }
