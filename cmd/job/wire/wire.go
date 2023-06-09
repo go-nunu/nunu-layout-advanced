@@ -14,7 +14,6 @@ import (
 // wire.go 初始化模块
 func NewApp(*viper.Viper, *log.Logger) (*job.Job, func(), error) {
 	panic(wire.Build(
-		provider.DaoSet,
 		provider.JobSet,
 	))
 }
