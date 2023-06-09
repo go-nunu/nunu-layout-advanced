@@ -2,33 +2,34 @@ package job
 
 import (
 	"fmt"
+	"github.com/go-co-op/gocron"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
-	"github.com/robfig/cron"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Job struct {
-	db  *gorm.DB
 	log *log.Logger
 }
 
-func NewJob(db *gorm.DB, log *log.Logger) *Job {
+func NewJob(log *log.Logger) *Job {
 	return &Job{
-		db:  db,
 		log: log,
 	}
 }
 func (j *Job) Run() {
-	c := cron.New()
-	var err error
-	err = c.AddFunc("0/3 * * * * *", func() {
-		j.log.Info("I'm a Task.")
+	s := gocron.NewScheduler(time.UTC)
+	_, err := s.CronWithSeconds("0/3 * * * * *").Do(func() {
+		j.log.Info("I'm a Task1.")
 	})
-
+	if err != nil {
+		fmt.Println(err)
+	}
+	_, err = s.Every("3s").Do(func() {
+		j.log.Info("I'm a Task2.")
+	})
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	c.Start()
-	select {}
+	s.StartBlocking()
 }
