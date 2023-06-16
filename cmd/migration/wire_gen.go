@@ -4,20 +4,19 @@
 //go:build !wireinject
 // +build !wireinject
 
-package wire
+package main
 
 import (
-	"github.com/go-nunu/nunu-layout-advanced/internal/dao"
 	"github.com/go-nunu/nunu-layout-advanced/internal/migration"
+	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:
 
-// wire.go 初始化模块
-func NewApp(viperViper *viper.Viper, logger *log.Logger) (*migration.Migrate, func(), error) {
-	db := dao.NewDB(viperViper)
+func newApp(viperViper *viper.Viper, logger *log.Logger) (*migration.Migrate, func(), error) {
+	db := repository.NewDB(viperViper)
 	migrate := migration.NewMigrate(db, logger)
 	return migrate, func() {
 	}, nil

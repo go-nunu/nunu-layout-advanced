@@ -11,7 +11,7 @@ import (
 func NewServerHTTP(
 	logger *log.Logger,
 	jwt *middleware.JWT,
-	userHandler *handler.UserHandler,
+	userHandler handler.UserHandler,
 ) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -33,8 +33,8 @@ func NewServerHTTP(
 			})
 		})
 
-		noAuthRouter.POST("/user/register", userHandler.Register)
-		noAuthRouter.POST("/user/login", userHandler.Login)
+		noAuthRouter.POST("/register", userHandler.Register)
+		noAuthRouter.POST("/login", userHandler.Login)
 	}
 	// 非严格权限路由
 	noStrictAuthRouter := r.Group("/").Use(middleware.NoStrictAuth(jwt, logger), middleware.RequestLogMiddleware(logger))

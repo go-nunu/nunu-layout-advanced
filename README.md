@@ -1,20 +1,17 @@
-# Nunu — A CLI tool for building go aplication.
+# nunu-layout-basic - Basic Layout
 
-Nunu is an application scaffold based on Golang, named after a game character in League of Legends, a little boy riding on the shoulder of a snow monster. Like Nunu, this project also stands on the shoulders of giants, integrating various popular libraries in the Golang ecosystem. Their combination can help you quickly build an efficient and reliable application.
+Nunu is an application scaffold based on Golang. Its name comes from a game character in League of Legends, a little boy riding on the shoulder of a yeti. Like Nunu, this project also stands on the shoulders of giants. It is a composition of various popular libraries from the Golang ecosystem, which can help you quickly build efficient and reliable applications.
 
-[中文介绍](https://github.com/go-nunu/nunu/blob/main/README_zh.md)
-
+[English Introduction](https://github.com/go-nunu/nunu/blob/main/README.md)
 
 ![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/banner.png)
 
-
-
-
-
-
+## Documentation
+* [User Guide](https://github.com/go-nunu/nunu/blob/main/docs/en/guide.md)
+* [Architecture](https://github.com/go-nunu/nunu/blob/main/docs/en/architecture.md)
+* [Getting Started Tutorial](https://github.com/go-nunu/nunu/blob/main/docs/en/tutorial.md)
 
 ## Features
-
 - **Gin**: https://github.com/gin-gonic/gin
 - **Gorm**: https://github.com/go-gorm/gorm
 - **Wire**: https://github.com/google/wire
@@ -27,103 +24,92 @@ Nunu is an application scaffold based on Golang, named after a game character in
 - **gocron**:  https://github.com/go-co-op/gocron
 - More...
 
-## Features
-* **Low learning cost and customization**: Nunu encapsulates some popular libraries that Gopher is most familiar with. You can easily customize your application to meet specific needs.
-* **High performance and scalability**: Nunu aims to have high performance and scalability. It uses the latest technology and best practices to ensure that your application can handle high traffic and large amounts of data.
-* **Secure and reliable**: Nunu uses stable and reliable third-party libraries to ensure the security and reliability of your application.
-* **Modular and extensible**: Nunu is designed to be modular and extensible. You can easily add new features and functionality by using third-party libraries or writing your own modules.
-* **Complete documentation and testing**: Nunu has complete documentation and testing. It provides comprehensive documentation and examples to help you get started quickly. It also includes a set of test suites to ensure that your application works as expected.
+## Highlights
+* **Low Learning Curve and Customization**: Nunu encapsulates popular libraries that Gophers are familiar with. You can easily customize the application to meet specific requirements.
+* **High Performance and Scalability**: Nunu aims to be high-performance and scalable. It utilizes the latest technologies and best practices to ensure your application can handle high traffic and large data volumes.
+* **Security and Reliability**: Nunu uses stable and reliable third-party libraries to ensure the security and reliability of your application.
+* **Modularity and Extensibility**: Nunu is designed to be modular and extensible. You can easily add new features and functionalities by using third-party libraries or writing your own modules.
+* **Comprehensive Documentation and Test Coverage**: Nunu has comprehensive documentation and test coverage. It provides detailed documentation and examples to help you get started quickly. It also includes a test suite to ensure your application works as expected.
 
 ## Nunu CLI
 
 ![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/screenshot.jpg)
 
-
-## Documentation
-* [Guide](https://github.com/go-nunu/nunu/blob/main/docs/en/guide.md)
-* [Architecture](https://github.com/go-nunu/nunu/blob/main/docs/en/architecture.md)
-* [Tutorial](https://github.com/go-nunu/nunu/blob/main/docs/en/tutorial.md)
-
-
 ## Directory Structure
 ```
 .
 ├── cmd
-│   └── server
-│       ├── wire
-│       │   ├── wire.go
-│       │   └── wire_gen.go
-│       └── main.go
+│   └── server
+│       ├── main.go
+│       ├── wire.go
+│       └── wire_gen.go
 ├── config
-│   ├── local.yml
-│   └── prod.yml
+│   ├── local.yml
+│   └── prod.yml
 ├── internal
-│   ├── dao
-│   │   ├── dao.go
-│   │   └── user.go
-│   ├── handler
-│   │   ├── handler.go
-│   │   └── user.go
-│   ├── middleware
-│   │   └── cors.go
-│   ├── model
-│   │   └── user.go
-│   ├── provider
-│   │   └── provider.go
-│   ├── server
-│   │   └── http.go
-│   └── service
-│       ├── service.go
-│       └── user.go
+│   ├── handler
+│   │   ├── handler.go
+│   │   └── user.go
+│   ├── middleware
+│   │   └── cors.go
+│   ├── model
+│   │   └── user.go
+│   ├── repository
+│   │   ├── repository.go
+│   │   └── user.go
+│   ├── server
+│   │   └── http.go
+│   └── service
+│       ├── service.go
+│       └── user.go
 ├── pkg
-│   ├── config
-│   │   └── config.go
-│   ├── helper
-│   │   ├── md5
-│   │   │   └── md5.go
-│   │   ├── resp
-│   │   │   └── resp.go
-│   │   ├── sonyflake
-│   │   │   └── sonyflake.go
-│   │   └── uuid
-│   │       └── uuid.go
-│   ├── http
-│   │   └── http.go
-│   └── log
-│       └── log.go
 ├── LICENSE
 ├── README.md
 ├── README_zh.md
 ├── go.mod
 └── go.sum
+
 ```
 
+This is a classic directory structure for a Golang project, which includes the following directories:
 
-This is the directory structure of a classic Golang project, which includes the following directories:
+- cmd: Contains the entry points of the application, including the main function and dependency injection code.
+  - server: The main entry point of the application, including the main function and dependency injection code.
+    - main.go: The main function used to start the application.
+    - wire.go: The dependency injection code generated using Wire.
+    - wire_gen.go: The dependency injection code generated using Wire.
 
-- `cmd`: Contains the code for command-line applications, such as `main.go`.
-- `config`: Contains configuration files, such as `config.yaml`.
-- `internal`: Contains internal code that is not exposed externally.
-    - `dao`: Contains the code for Data Access Objects (DAOs).
-    - `handler`: Contains the code for HTTP request handlers.
-    - `middleware`: Contains the code for HTTP middleware.
-    - `model`: Contains the code for data models.
-    - `provider`: Contains the code for dependency injection.
-    - `server`: Contains the code for HTTP servers.
-    - `service`: Contains the code for business logic.
-- `pkg`: Contains reusable code that is exposed externally.
-    - `config`: Contains the code for reading configuration files.
-    - `helper`: Contains the code for helper functions.
-    - `http`: Contains HTTP-related code.
-    - `log`: Contains code related to logging.
+- config: Contains the configuration files of the application.
+  - local.yml: The configuration file for the local environment.
+  - prod.yml: The configuration file for the production environment.
+
+- internal: Contains the internal code of the application.
+  - handler: Contains the handlers for handling HTTP requests.
+    - handler.go: The common handler for handling HTTP requests.
+    - user.go: The handler for handling user-related HTTP requests.
+  - middleware: Contains the middleware code.
+    - cors.go: The CORS (Cross-Origin Resource Sharing) middleware.
+  - model: Contains the data model code.
+    - user.go: The user data model.
+  - repository: Contains the data access code.
+    - repository.go: The common interface for data access.
+    - user.go: The implementation of the user data access interface.
+  - server: Contains the server code.
+    - http.go: The implementation of the HTTP server.
+  - service: Contains the business logic code.
+    - service.go: The common interface for business logic.
+    - user.go: The implementation of the user business logic.
+
+- pkg: Contains the public packages of the application.
+- storage: Contains the storage files of the application.
+- go.mod: The Go module file.
+- go.sum: The dependency versions file for the Go module.
 
 ## Requirements
-To use Nunu, you need to install the following software on your system:
+To use Nunu, you need to have the following software installed on your system:
 
 * Golang 1.16 or higher
 * Git
-* MySQL 5.7 or higher (optional)
-* Redis (optional)
 
 ### Installation
 
@@ -133,29 +119,33 @@ You can install Nunu using the following command:
 go install github.com/go-nunu/nunu@latest
 ```
 
-
 ### Creating a New Project
 
 You can create a new Golang project using the following command:
 
 ```bash
 nunu new projectName
+```
 
-// or
+By default, it will pull from the GitHub repository, but you can also use a mirror repository for faster access:
 
-nunu new projectName -r https://github.com/go-nunu/nunu-layout-advanced.git
+```
+// Use the basic template
+nunu new projectName -r https://gitee.com/go-nunu/nunu-layout-basic.git
+// Use the advanced template
+nunu new projectName -r https://gitee.com/go-nunu/nunu-layout-advanced.git
 ```
 
 This command will create a directory named `projectName` and generate an elegant Golang project structure within it.
 
 ### Creating Components
 
-You can create handlers, services, and daos for your project using the following commands:
+You can create handlers, services, repositories, and models for your project using the following commands:
 
 ```bash
 nunu create handler user
 nunu create service user
-nunu create dao user
+nunu create repository user
 nunu create model user
 ```
 or
@@ -163,7 +153,7 @@ or
 nunu create all user
 ```
 
-These commands will create components named `UserHandler`, `UserService`, `UserDao` and `UserModel`, respectively, and place them in the correct directories.
+These commands will create components named `UserHandler`, `UserService`, `UserDao`, and `UserModel` respectively and place them in the correct directories.
 
 ### Starting the Project
 
@@ -173,11 +163,11 @@ You can quickly start your project using the following command:
 nunu run
 ```
 
-This command will start your Golang project and support file update hot reload.
+This command will start your Golang project and support hot-reloading of files.
 
 ### Compiling wire.go
 
-You can quickly compile your `wire.go` file using the following command:
+You can quickly compile `wire.go` using the following command:
 
 ```bash
 nunu wire
@@ -185,10 +175,10 @@ nunu wire
 
 This command will compile your `wire.go` file and generate the required dependencies.
 
-## Contributing
+## Contribution
 
-If you find any issues or have any improvement suggestions, please feel free to raise an issue or submit a pull request. We welcome your contributions!
+If you find any issues or have any improvement suggestions, please feel free to raise an issue or submit a pull request. Your contributions are highly appreciated!
 
 ## License
 
-Nunu is released under the MIT license. See [LICENSE](LICENSE) for more information.
+Nunu is released under the MIT License. See the [LICENSE](LICENSE) file for more information.

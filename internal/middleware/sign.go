@@ -13,50 +13,37 @@ import (
 
 func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		timestamp, ok := ctx.Request.Header["Timestamp"]
-		if !ok || len(timestamp) == 0 {
-			resp.HandleError(ctx, http.StatusBadRequest, 1, "sign error.", nil)
-			ctx.Abort()
-			return
-		}
-		nonce, ok := ctx.Request.Header["Nonce"]
-		if !ok || len(nonce) == 0 {
-			resp.HandleError(ctx, http.StatusBadRequest, 1, "sign error.", nil)
-			ctx.Abort()
-			return
-		}
-		sign, ok := ctx.Request.Header["Sign"]
-		if !ok || len(sign) == 0 {
-			resp.HandleError(ctx, http.StatusBadRequest, 1, "sign error.", nil)
-			ctx.Abort()
-			return
-		}
-		appVersion, ok := ctx.Request.Header["App-Version"]
-		if !ok || len(appVersion) == 0 {
-			resp.HandleError(ctx, http.StatusBadRequest, 1, "sign error.", nil)
-			ctx.Abort()
-			return
+		requiredHeaders := []string{"Timestamp", "Nonce", "Sign", "App-Version"}
+
+		for _, header := range requiredHeaders {
+			value, ok := ctx.Request.Header[header]
+			if !ok || len(value) == 0 {
+				resp.HandleError(ctx, http.StatusBadRequest, 1, "sign error.", nil)
+				ctx.Abort()
+				return
+			}
 		}
 
-		data := map[string]string{}
-		data["AppKey"] = conf.GetString("security.api_sign.app_key")
-		data["Timestamp"] = timestamp[0]
-		data["Nonce"] = nonce[0]
-		data["AppVersion"] = appVersion[0]
+		data := map[string]string{
+			"AppKey":     conf.GetString("security.api_sign.app_key"),
+			"Timestamp":  ctx.Request.Header.Get("Timestamp"),
+			"Nonce":      ctx.Request.Header.Get("Nonce"),
+			"AppVersion": ctx.Request.Header.Get("App-Version"),
+		}
 
 		var keys []string
 		for k := range data {
 			keys = append(keys, k)
 		}
 		sort.Slice(keys, func(i, j int) bool { return strings.ToLower(keys[i]) < strings.ToLower(keys[j]) })
-		//拼接
-		str := ""
+
+		var str string
 		for _, k := range keys {
 			str += k + data[k]
 		}
 		str += conf.GetString("security.api_sign.app_security")
 
-		if sign[0] != strings.ToUpper(md5.Md5(str)) {
+		if ctx.Request.Header.Get("Sign") != strings.ToUpper(md5.Md5(str)) {
 			resp.HandleError(ctx, http.StatusBadRequest, 1, "sign error.", nil)
 			ctx.Abort()
 			return

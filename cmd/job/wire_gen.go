@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package wire
+package main
 
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/job"
@@ -14,8 +14,7 @@ import (
 
 // Injectors from wire.go:
 
-// wire.go 初始化模块
-func NewApp(viperViper *viper.Viper, logger *log.Logger) (*job.Job, func(), error) {
+func newApp(viperViper *viper.Viper, logger *log.Logger) (*job.Job, func(), error) {
 	jobJob := job.NewJob(logger)
 	return jobJob, func() {
 	}, nil

@@ -3,9 +3,12 @@ module github.com/go-nunu/nunu-layout-advanced
 go 1.16
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-co-op/gocron v1.28.2
+	github.com/go-redis/redismock/v9 v9.0.3 // indirect
 	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/wire v0.5.0
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.0.5

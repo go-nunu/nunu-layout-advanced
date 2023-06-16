@@ -1,30 +1,32 @@
 package middleware
 
 import (
+	"net/http"
+	"regexp"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"net/http"
-	"regexp"
-	"time"
 )
 
 type JWT struct {
 	key []byte
 }
+
 type MyCustomClaims struct {
 	UserId string
 	jwt.RegisteredClaims
 }
 
-// NewJwt https://pkg.go.dev/github.com/golang-jwt/jwt/v5
 func NewJwt(conf *viper.Viper) *JWT {
 	return &JWT{key: []byte(conf.GetString("security.jwt.key"))}
 }
-func (j *JWT) GenToken(userId string, expiresAt time.Time) string {
+
+func (j *JWT) GenToken(userId string, expiresAt time.Time) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyCustomClaims{
 		UserId: userId,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -41,13 +43,13 @@ func (j *JWT) GenToken(userId string, expiresAt time.Time) string {
 	// Sign and get the complete encoded token as a string using the key
 	tokenString, err := token.SignedString(j.key)
 	if err != nil {
-		return ""
+		return "", err
 	}
-	return tokenString
-
+	return tokenString, nil
 }
+
 func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
-	re, _ := regexp.Compile(`(?i)Bearer `)
+	re := regexp.MustCompile(`(?i)Bearer `)
 	tokenString = re.ReplaceAllString(tokenString, "")
 	token, err := jwt.ParseWithClaims(tokenString, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return j.key, nil
@@ -60,7 +62,6 @@ func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
 	}
 }
 
-// StrictAuth 严格权限
 func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
@@ -74,7 +75,6 @@ func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 			return
 		}
 
-		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(tokenString)
 		if err != nil {
 			logger.WithContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
@@ -86,7 +86,6 @@ func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 			return
 		}
 
-		// 继续交由下一个路由处理,并将解析出的信息传递下去
 		ctx.Set("claims", claims)
 		recoveryLoggerFunc(ctx, logger)
 		ctx.Next()
@@ -107,14 +106,12 @@ func NoStrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 			return
 		}
 
-		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(tokenString)
 		if err != nil {
 			ctx.Next()
 			return
 		}
 
-		// 继续交由下一个路由处理,并将解析出的信息传递下去
 		ctx.Set("claims", claims)
 		recoveryLoggerFunc(ctx, logger)
 		ctx.Next()
