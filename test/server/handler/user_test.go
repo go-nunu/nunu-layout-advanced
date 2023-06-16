@@ -4,94 +4,154 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/go-nunu/nunu-layout-advanced/cmd/server/wire"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
-	"github.com/stretchr/testify/assert"
-	"io"
+	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
+	"github.com/go-nunu/nunu-layout-advanced/mocks/service"
+
+	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"strings"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
+	"github.com/go-nunu/nunu-layout-advanced/internal/model"
+	"github.com/go-nunu/nunu-layout-advanced/internal/service"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 )
 
-var headers = map[string]string{
-	"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ5aHM2SGVzZmdGIiwiZXhwIjoxNjkzOTE0ODgwLCJuYmYiOjE2ODYxMzg4ODAsImlhdCI6MTY4NjEzODg4MH0.NnFrZFgc_333a9PXqaoongmIDksNvQoHzgM_IhJM4MQ",
-}
+var (
+	userId = "yhs6HesfgF"
+
+	token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ5aHM2SGVzZmdGIiwiZXhwIjoxNjkzOTE0ODgwLCJuYmYiOjE2ODYxMzg4ODAsImlhdCI6MTY4NjEzODg4MH0.NnFrZFgc_333a9PXqaoongmIDksNvQoHzgM_IhJM4MQ"
+)
+var hdl *handler.Handler
 
 func TestMain(m *testing.M) {
 	fmt.Println("begin")
+	os.Setenv("APP_CONF", "../../../config/local.yml")
+	conf := config.NewConfig()
+
+	logger := log.NewLog(conf)
+	hdl = handler.NewHandler(logger)
 
 	code := m.Run()
 	fmt.Println("test end")
 
 	os.Exit(code)
-
 }
 
-type Response struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+func TestUserHandler_Register(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	params := service.RegisterRequest{
+		Username: "xxx",
+		Password: "123456",
+		Email:    "xxx@gmail.com",
+	}
+
+	mockUserService := mock_service.NewMockUserService(ctrl)
+	mockUserService.EXPECT().Register(gomock.Any(), &params).Return(nil)
+
+	router := setupRouter(mockUserService)
+	paramsJson, _ := json.Marshal(params)
+
+	resp := performRequest(router, "POST", "/register", bytes.NewBuffer(paramsJson))
+
+	assert.Equal(t, resp.Code, http.StatusOK)
+	// Add assertions for the response body if needed
 }
 
-func NewRequest(method, path string, header map[string]string, body io.Reader) (*Response, error) {
-	// 测试时需要定义好 gin 的路由定义函数
-	os.Setenv("APP_CONF", "../../../config/local.yml")
+func TestUserHandler_Login(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	params := service.LoginRequest{
+		Username: "xxx",
+		Password: "123456",
+	}
+
+	mockUserService := mock_service.NewMockUserService(ctrl)
+	mockUserService.EXPECT().Login(gomock.Any(), &params).Return(token, nil)
+
+	router := setupRouter(mockUserService)
+	paramsJson, _ := json.Marshal(params)
+
+	resp := performRequest(router, "POST", "/login", bytes.NewBuffer(paramsJson))
+
+	assert.Equal(t, resp.Code, http.StatusOK)
+	// Add assertions for the response body if needed
+}
+
+func TestUserHandler_GetProfile(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockUserService := mock_service.NewMockUserService(ctrl)
+	mockUserService.EXPECT().GetProfile(gomock.Any(), userId).Return(&model.User{
+		Id:       1,
+		UserId:   userId,
+		Username: "xxxxx",
+		Nickname: "xxxxx",
+		Password: "xxxxx",
+		Email:    "xxxxx@gmail.com",
+	}, nil)
+
+	router := setupRouter(mockUserService)
+	req, _ := http.NewRequest("GET", "/user", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+	resp := httptest.NewRecorder()
+
+	router.ServeHTTP(resp, req)
+
+	assert.Equal(t, resp.Code, http.StatusOK)
+	// Add assertions for the response body if needed
+}
+
+func TestUserHandler_UpdateProfile(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	params := service.UpdateProfileRequest{
+		Nickname: "alan",
+		Email:    "alan@gmail.com",
+		Avatar:   "xxx",
+	}
+
+	mockUserService := mock_service.NewMockUserService(ctrl)
+	mockUserService.EXPECT().UpdateProfile(gomock.Any(), userId, &params).Return(nil)
+
+	router := setupRouter(mockUserService)
+	paramsJson, _ := json.Marshal(params)
+
+	req, _ := http.NewRequest("PUT", "/user", bytes.NewBuffer(paramsJson))
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+	resp := httptest.NewRecorder()
+
+	router.ServeHTTP(resp, req)
+
+	assert.Equal(t, resp.Code, http.StatusOK)
+	// Add assertions for the response body if needed
+}
+
+func setupRouter(mockUserService *mock_service.MockUserService) *gin.Engine {
 	conf := config.NewConfig()
 	logger := log.NewLog(conf)
-	logger.Info("start")
+	jwt := middleware.NewJwt(conf)
+	userHandler := handler.NewUserHandler(hdl, mockUserService)
+	gin.SetMode(gin.TestMode)
+	router := server.NewServerHTTP(logger, jwt, userHandler)
+	return router
+}
 
-	app, _, err := wire.NewApp(conf, logger)
-	if err != nil {
-		return nil, err
-	}
+func performRequest(r http.Handler, method, path string, body *bytes.Buffer) *httptest.ResponseRecorder {
 	req, _ := http.NewRequest(method, path, body)
-	for k, v := range header {
-		req.Header.Set(k, v)
-	}
-	if strings.ToUpper(method) != "GET" && body != nil {
-		req.Header.Set("Content-Type", "application/json")
-
-	}
-	w := httptest.NewRecorder()
-	app.ServeHTTP(w, req)
-	response := new(Response)
-	err = json.Unmarshal([]byte(w.Body.String()), response)
-	if err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-func TestGetProfile(t *testing.T) {
-	response, err := NewRequest("GET",
-		fmt.Sprintf("/user"),
-		headers,
-		nil,
-	)
-
-	t.Log("response")
-	assert.Nil(t, err)
-	assert.Equal(t, 1, response.Code)
-}
-func TestUpdateProfile(t *testing.T) {
-	params, err := json.Marshal(map[string]interface{}{
-		"email":    "5303221@gmail.com",
-		"username": "user1",
-		"nickname": "8888",
-	})
-	assert.Nil(t, err)
-	response, err := NewRequest("PUT",
-		"/user",
-		headers,
-		bytes.NewBuffer(params),
-	)
-
-	t.Log("响应结果")
-	assert.Nil(t, err)
-	//assert.NotEmpty(t, response.Data)
-	assert.Equal(t, 0, response.Code)
-	//tsms.SendSMS2("MotokApp", "18502100065", "1234")
+	resp := httptest.NewRecorder()
+	r.ServeHTTP(resp, req)
+	return resp
 }

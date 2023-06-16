@@ -1,4 +1,4 @@
-package dao
+package repository
 
 import (
 	"context"
@@ -11,14 +11,14 @@ import (
 	"time"
 )
 
-type Dao struct {
+type Repository struct {
 	db     *gorm.DB
 	rdb    *redis.Client
 	logger *log.Logger
 }
 
-func NewDao(db *gorm.DB, rdb *redis.Client, logger *log.Logger) *Dao {
-	return &Dao{
+func NewRepository(db *gorm.DB, rdb *redis.Client, logger *log.Logger) *Repository {
+	return &Repository{
 		db:     db,
 		rdb:    rdb,
 		logger: logger,

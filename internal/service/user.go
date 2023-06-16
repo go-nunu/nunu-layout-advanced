@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/go-nunu/nunu-layout-advanced/internal/dao"
+	"context"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/convert"
+	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
@@ -32,27 +32,29 @@ type ChangePasswordRequest struct {
 	NewPassword string `json:"newPassword" binding:"required"`
 }
 
-type UserService struct {
-	userDao *dao.UserDao
+type UserService interface {
+	Register(ctx context.Context, req *RegisterRequest) error
+	Login(ctx context.Context, req *LoginRequest) (string, error)
+	GetProfile(ctx context.Context, userId string) (*model.User, error)
+	UpdateProfile(ctx context.Context, userId string, req *UpdateProfileRequest) error
+	GenerateToken(ctx context.Context, userId string) (string, error)
+}
+
+type userService struct {
+	userRepo repository.UserRepository
 	*Service
 }
 
-func NewUserService(service *Service, userDao *dao.UserDao) *UserService {
-	return &UserService{
-		userDao: userDao,
-		Service: service,
+func NewUserService(service *Service, userRepo repository.UserRepository) UserService {
+	return &userService{
+		userRepo: userRepo,
+		Service:  service,
 	}
 }
 
-func (s *UserService) Register(req *RegisterRequest) error {
-	// 生成用户ID
-	userId, err := s.generateUserId()
-	if err != nil {
-		return errors.Wrap(err, "failed to generate user ID")
-	}
-
+func (s *userService) Register(ctx context.Context, req *RegisterRequest) error {
 	// 检查用户名是否已存在
-	if user, err := s.userDao.GetUserByUsername(req.Username); err == nil && user != nil {
+	if user, err := s.userRepo.GetByUsername(ctx, req.Username); err == nil && user != nil {
 		return errors.New("username already exists")
 	}
 
@@ -60,7 +62,11 @@ func (s *UserService) Register(req *RegisterRequest) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to hash password")
 	}
-
+	// 生成用户ID
+	userId, err := s.sid.GenString()
+	if err != nil {
+		return errors.Wrap(err, "failed to generate user ID")
+	}
 	// 创建用户
 	user := &model.User{
 		UserId:   userId,
@@ -68,15 +74,15 @@ func (s *UserService) Register(req *RegisterRequest) error {
 		Password: string(hashedPassword),
 		Email:    req.Email,
 	}
-	if err = s.userDao.CreateUser(user); err != nil {
+	if err = s.userRepo.Create(ctx, user); err != nil {
 		return errors.Wrap(err, "failed to create user")
 	}
 
 	return nil
 }
 
-func (s *UserService) Login(req *LoginRequest) (string, error) {
-	user, err := s.userDao.GetUserByUsername(req.Username)
+func (s *userService) Login(ctx context.Context, req *LoginRequest) (string, error) {
+	user, err := s.userRepo.GetByUsername(ctx, req.Username)
 	if err != nil || user == nil {
 		return "", errors.Wrap(err, "failed to get user by username")
 	}
@@ -86,7 +92,7 @@ func (s *UserService) Login(req *LoginRequest) (string, error) {
 		return "", errors.Wrap(err, "failed to hash password")
 	}
 	// 生成JWT token
-	token, err := s.generateToken(user.UserId)
+	token, err := s.GenerateToken(ctx, user.UserId)
 	if err != nil {
 		return "", errors.Wrap(err, "failed to generate JWT token")
 	}
@@ -94,8 +100,8 @@ func (s *UserService) Login(req *LoginRequest) (string, error) {
 	return token, nil
 }
 
-func (s *UserService) GetProfile(userId string) (*model.User, error) {
-	user, err := s.userDao.GetUserById(userId)
+func (s *userService) GetProfile(ctx context.Context, userId string) (*model.User, error) {
+	user, err := s.userRepo.GetByID(ctx, userId)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get user by ID")
 	}
@@ -103,8 +109,8 @@ func (s *UserService) GetProfile(userId string) (*model.User, error) {
 	return user, nil
 }
 
-func (s *UserService) UpdateProfile(userId string, req *UpdateProfileRequest) error {
-	user, err := s.userDao.GetUserById(userId)
+func (s *userService) UpdateProfile(ctx context.Context, userId string, req *UpdateProfileRequest) error {
+	user, err := s.userRepo.GetByID(ctx, userId)
 	if err != nil {
 		return errors.Wrap(err, "failed to get user by ID")
 	}
@@ -112,25 +118,14 @@ func (s *UserService) UpdateProfile(userId string, req *UpdateProfileRequest) er
 	user.Email = req.Email
 	user.Nickname = req.Nickname
 
-	if err = s.userDao.UpdateUser(user); err != nil {
+	if err = s.userRepo.Update(ctx, user); err != nil {
 		return errors.Wrap(err, "failed to update user")
 	}
 
 	return nil
 }
 
-func (s *UserService) generateUserId() (string, error) {
-	// 生成分布式ID
-	id, err := s.sonyflake.NextID()
-	if err != nil {
-		return "", errors.Wrap(err, "failed to generate sonyflake ID")
-	}
-
-	// 将ID转换为字符串
-	return convert.IntToBase62(int(id)), nil
-}
-
-func (s *UserService) generateToken(userId string) (string, error) {
+func (s *userService) GenerateToken(ctx context.Context, userId string) (string, error) {
 	// 生成JWT token
 	s.jwt.GenToken(userId, time.Now().Add(time.Hour*24*90))
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{

@@ -4,14 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
-	"github.com/sony/sonyflake"
 )
 
 type Handler struct {
 	logger *log.Logger
 }
 
-func NewHandler(logger *log.Logger, sf *sonyflake.Sonyflake) *Handler {
+func NewHandler(logger *log.Logger) *Handler {
 	return &Handler{
 		logger: logger,
 	}
