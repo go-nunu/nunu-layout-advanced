@@ -1,7 +1,7 @@
 package uuid
 
-import uuid "github.com/satori/go.uuid"
+import uuid "github.com/google/uuid"
 
 func GenUUID() string {
-	return uuid.NewV4().String()
+	return uuid.NewString()
 }
