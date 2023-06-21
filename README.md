@@ -1,8 +1,8 @@
-# nunu-layout-basic - Basic Layout
+# nunu-layout-advanced - Advanced Layout
 
 Nunu is an application scaffold based on Golang. Its name comes from a game character in League of Legends, a little boy riding on the shoulder of a yeti. Like Nunu, this project also stands on the shoulders of giants. It is a composition of various popular libraries from the Golang ecosystem, which can help you quickly build efficient and reliable applications.
 
-[English Introduction](https://github.com/go-nunu/nunu/blob/main/README.md)
+[简体中文介绍](https://github.com/go-nunu/nunu-layout-advanced/blob/main/README_zh.md)
 
 ![Nunu](https://github.com/go-nunu/nunu/blob/main/.github/assets/banner.png)
 
