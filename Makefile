@@ -10,6 +10,6 @@ mock:
 
 .PHONY: test
 test:
-	go test -coverpkg=./internal/handler,./internal/service,./internal/repository -coverprofile=./.nunu/coverage.out ./test/server/...
-	go tool cover -html=./.nunu/coverage.out -o coverage.html
+	go test -coverpkg=./internal/handler,./internal/service,./internal/repository -coverprofile=./coverage.out ./test/server/...
+	go tool cover -html=./coverage.out -o coverage.html
 
