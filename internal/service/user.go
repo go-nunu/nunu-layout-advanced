@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -127,11 +126,7 @@ func (s *userService) UpdateProfile(ctx context.Context, userId string, req *Upd
 
 func (s *userService) GenerateToken(ctx context.Context, userId string) (string, error) {
 	// 生成JWT token
-	s.jwt.GenToken(userId, time.Now().Add(time.Hour*24*90))
-	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userId": userId,
-		"exp":    time.Now().Add(time.Hour * 24).Unix(),
-	}).SignedString([]byte("secret"))
+	token, err := s.jwt.GenToken(userId, time.Now().Add(time.Hour*24*90))
 	if err != nil {
 		return "", errors.Wrap(err, "failed to generate JWT token")
 	}
