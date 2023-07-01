@@ -14,8 +14,7 @@ RUN mv config /data/app/bin/
 FROM alpine:3.16
 RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 
-# alpine
-# 设置时区为上海
+
 RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata
@@ -30,5 +29,5 @@ COPY --from=builder /data/app/bin /data/app
 EXPOSE 8000
 ENTRYPOINT [ "./server" ]
 
-#docker build -t  1.1.1.1:5000/demo-api:v1 --build-arg APP_CONF=config/prod.yml --build-arg  APP_RELATIVE_PATH=./app/demo-api  .
+#docker build -t  1.1.1.1:5000/demo-api:v1 --build-arg APP_CONF=config/prod.yml --build-arg  APP_RELATIVE_PATH=./cmd/server/...  .
 #docker run -it --rm --entrypoint=ash 1.1.1.1:5000/demo-api:v1
