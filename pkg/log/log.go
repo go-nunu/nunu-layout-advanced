@@ -21,9 +21,8 @@ func NewLog(conf *viper.Viper) *Logger {
 }
 
 func initZap(conf *viper.Viper) *Logger {
-	// 日志地址 "out.log" 自定义
+	// log address "out.log" User-defined
 	lp := conf.GetString("log.log_file_name")
-	// 日志级别 DEBUG,ERROR, INFO
 	lv := conf.GetString("log.log_level")
 	var level zapcore.Level
 	//debug<info<warn<error<fatal<panic
@@ -40,11 +39,11 @@ func initZap(conf *viper.Viper) *Logger {
 		level = zap.InfoLevel
 	}
 	hook := lumberjack.Logger{
-		Filename:   lp,                             // 日志文件路径
-		MaxSize:    conf.GetInt("log.max_size"),    // 每个日志文件保存的最大尺寸 单位：M
-		MaxBackups: conf.GetInt("log.max_backups"), // 日志文件最多保存多少个备份
-		MaxAge:     conf.GetInt("log.max_age"),     // 文件最多保存多少天
-		Compress:   conf.GetBool("log.compress"),   // 是否压缩
+		Filename:   lp,                             // Log file path
+		MaxSize:    conf.GetInt("log.max_size"),    // Maximum size unit for each log file: M
+		MaxBackups: conf.GetInt("log.max_backups"), // The maximum number of backups that can be saved for log files
+		MaxAge:     conf.GetInt("log.max_age"),     // Maximum number of days the file can be saved
+		Compress:   conf.GetBool("log.compress"),   // Compression or not
 	}
 
 	var encoder zapcore.Encoder
@@ -79,9 +78,9 @@ func initZap(conf *viper.Viper) *Logger {
 		})
 	}
 	core := zapcore.NewCore(
-		encoder, // 编码器配置
-		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&hook)), // 打印到控制台和文件
-		level, // 日志级别
+		encoder,
+		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&hook)), // Print to console and file
+		level,
 	)
 	if conf.GetString("env") != "prod" {
 		return &Logger{zap.New(core, zap.Development(), zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))}
@@ -90,18 +89,17 @@ func initZap(conf *viper.Viper) *Logger {
 
 }
 
-// 自定义时间编码器
 func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	//enc.AppendString(t.Format("2006-01-02 15:04:05"))
 	enc.AppendString(t.Format("2006-01-02 15:04:05.000000000"))
 }
 
-// NewContext 给指定的context添加字段
+// NewContext Adds a field to the specified context
 func (l *Logger) NewContext(ctx *gin.Context, fields ...zapcore.Field) {
 	ctx.Set(LOGGER_KEY, l.WithContext(ctx).With(fields...))
 }
 
-// WithContext 从指定的context返回一个zap实例
+// WithContext Returns a zap instance from the specified context
 func (l *Logger) WithContext(ctx *gin.Context) *Logger {
 	if ctx == nil {
 		return l

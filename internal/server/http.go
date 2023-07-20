@@ -19,11 +19,12 @@ func NewServerHTTP(
 	r.Use(
 		middleware.CORSMiddleware(),
 		middleware.ResponseLogMiddleware(logger),
+		middleware.RequestLogMiddleware(logger),
 		//middleware.SignMiddleware(log),
 	)
 
-	// 无权限路由
-	noAuthRouter := r.Group("/").Use(middleware.RequestLogMiddleware(logger))
+	// No route group has permission
+	noAuthRouter := r.Group("/")
 	{
 
 		noAuthRouter.GET("/", func(ctx *gin.Context) {
@@ -36,14 +37,14 @@ func NewServerHTTP(
 		noAuthRouter.POST("/register", userHandler.Register)
 		noAuthRouter.POST("/login", userHandler.Login)
 	}
-	// 非严格权限路由
-	noStrictAuthRouter := r.Group("/").Use(middleware.NoStrictAuth(jwt, logger), middleware.RequestLogMiddleware(logger))
+	// Non-strict permission routing group
+	noStrictAuthRouter := r.Group("/").Use(middleware.NoStrictAuth(jwt, logger))
 	{
 		noStrictAuthRouter.GET("/user", userHandler.GetProfile)
 	}
 
-	// 严格权限路由
-	strictAuthRouter := r.Group("/").Use(middleware.StrictAuth(jwt, logger), middleware.RequestLogMiddleware(logger))
+	// Strict permission routing group
+	strictAuthRouter := r.Group("/").Use(middleware.StrictAuth(jwt, logger))
 	{
 		strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
 	}
