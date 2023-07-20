@@ -17,7 +17,7 @@ import (
 func RequestLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		// 每次请求都初始化一次配置
+		// The configuration is initialized once per request
 		trace := md5.Md5(uuid.GenUUID())
 		logger.NewContext(ctx, zap.String("trace", trace))
 		logger.NewContext(ctx, zap.String("request_method", ctx.Request.Method))

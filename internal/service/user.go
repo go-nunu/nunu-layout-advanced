@@ -36,7 +36,6 @@ type UserService interface {
 	Login(ctx context.Context, req *LoginRequest) (string, error)
 	GetProfile(ctx context.Context, userId string) (*model.User, error)
 	UpdateProfile(ctx context.Context, userId string, req *UpdateProfileRequest) error
-	GenerateToken(ctx context.Context, userId string) (string, error)
 }
 
 type userService struct {
@@ -61,12 +60,12 @@ func (s *userService) Register(ctx context.Context, req *RegisterRequest) error 
 	if err != nil {
 		return errors.Wrap(err, "failed to hash password")
 	}
-	// 生成用户ID
+	// Generate user ID
 	userId, err := s.sid.GenString()
 	if err != nil {
 		return errors.Wrap(err, "failed to generate user ID")
 	}
-	// 创建用户
+	// Create a user
 	user := &model.User{
 		UserId:   userId,
 		Username: req.Username,
@@ -90,8 +89,7 @@ func (s *userService) Login(ctx context.Context, req *LoginRequest) (string, err
 	if err != nil {
 		return "", errors.Wrap(err, "failed to hash password")
 	}
-	// 生成JWT token
-	token, err := s.GenerateToken(ctx, user.UserId)
+	token, err := s.jwt.GenToken(user.UserId, time.Now().Add(time.Hour*24*90))
 	if err != nil {
 		return "", errors.Wrap(err, "failed to generate JWT token")
 	}
@@ -122,14 +120,4 @@ func (s *userService) UpdateProfile(ctx context.Context, userId string, req *Upd
 	}
 
 	return nil
-}
-
-func (s *userService) GenerateToken(ctx context.Context, userId string) (string, error) {
-	// 生成JWT token
-	token, err := s.jwt.GenToken(userId, time.Now().Add(time.Hour*24*90))
-	if err != nil {
-		return "", errors.Wrap(err, "failed to generate JWT token")
-	}
-
-	return token, nil
 }

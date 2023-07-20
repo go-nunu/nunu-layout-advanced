@@ -26,7 +26,10 @@ var (
 func TestMain(m *testing.M) {
 	fmt.Println("begin")
 
-	os.Setenv("APP_CONF", "../../../config/local.yml")
+	err := os.Setenv("APP_CONF", "../../../config/local.yml")
+	if err != nil {
+		panic(err)
+	}
 
 	conf := config.NewConfig()
 
@@ -207,21 +210,4 @@ func TestUserService_UpdateProfile_UserNotFound(t *testing.T) {
 	err := userService.UpdateProfile(ctx, userId, req)
 
 	assert.Error(t, err)
-}
-
-func TestUserService_GenerateToken(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockUserRepo := mock_repository.NewMockUserRepository(ctrl)
-
-	userService := service.NewUserService(srv, mockUserRepo)
-
-	ctx := context.Background()
-	userId := "123"
-
-	result, err := userService.GenerateToken(ctx, userId)
-
-	assert.NoError(t, err)
-	assert.NotEmpty(t, result)
 }

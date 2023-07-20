@@ -36,21 +36,6 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 	return m.recorder
 }
 
-// GenerateToken mocks base method.
-func (m *MockUserService) GenerateToken(ctx context.Context, userId string) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GenerateToken", ctx, userId)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GenerateToken indicates an expected call of GenerateToken.
-func (mr *MockUserServiceMockRecorder) GenerateToken(ctx, userId interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateToken", reflect.TypeOf((*MockUserService)(nil).GenerateToken), ctx, userId)
-}
-
 // GetProfile mocks base method.
 func (m *MockUserService) GetProfile(ctx context.Context, userId string) (*model.User, error) {
 	m.ctrl.T.Helper()
