@@ -16,7 +16,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	logger.Info("server start", zap.String("host", "http://127.0.0.1:"+conf.GetString("http.port")))
+	logger.Info("server start", zap.String("host", "http://localhost:"+conf.GetString("http.port")))
 
 	http.Run(app, fmt.Sprintf(":%d", conf.GetInt("http.port")))
 	defer cleanup()

@@ -7,17 +7,21 @@
 package main
 
 import (
-	"github.com/go-nunu/nunu-layout-advanced/internal/migration"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
+	"github.com/google/wire"
 	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:
 
-func newApp(viperViper *viper.Viper, logger *log.Logger) (*migration.Migrate, func(), error) {
+func newApp(viperViper *viper.Viper, logger *log.Logger) (*Migrate, func(), error) {
 	db := repository.NewDB(viperViper)
-	migrate := migration.NewMigrate(db, logger)
+	migrate := NewMigrate(db, logger)
 	return migrate, func() {
 	}, nil
 }
+
+// wire.go:
+
+var RepositorySet = wire.NewSet(repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewUserRepository)

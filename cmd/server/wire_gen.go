@@ -39,12 +39,6 @@ func newApp(viperViper *viper.Viper, logger *log.Logger) (*gin.Engine, func(), e
 
 // wire.go:
 
-var ServerSet = wire.NewSet(server.NewServerHTTP)
-
-var SidSet = wire.NewSet(sid.NewSid)
-
-var JwtSet = wire.NewSet(middleware.NewJwt)
-
 var HandlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler)
 
 var ServiceSet = wire.NewSet(service.NewService, service.NewUserService)

@@ -4,7 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/go-nunu/nunu-layout-advanced/mocks/repository"
+	"github.com/go-nunu/nunu-layout-advanced/internal/request"
+	"github.com/go-nunu/nunu-layout-advanced/test/mocks/repository"
 	"os"
 	"testing"
 
@@ -53,7 +54,7 @@ func TestUserService_Register(t *testing.T) {
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
-	req := &service.RegisterRequest{
+	req := &request.RegisterRequest{
 		Username: "testuser",
 		Password: "password",
 		Email:    "test@example.com",
@@ -76,7 +77,7 @@ func TestUserService_Register_UsernameExists(t *testing.T) {
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
-	req := &service.RegisterRequest{
+	req := &request.RegisterRequest{
 		Username: "testuser",
 		Password: "password",
 		Email:    "test@example.com",
@@ -98,7 +99,7 @@ func TestUserService_Login(t *testing.T) {
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
-	req := &service.LoginRequest{
+	req := &request.LoginRequest{
 		Username: "testuser",
 		Password: "password",
 	}
@@ -126,7 +127,7 @@ func TestUserService_Login_UserNotFound(t *testing.T) {
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
-	req := &service.LoginRequest{
+	req := &request.LoginRequest{
 		Username: "testuser",
 		Password: "password",
 	}
@@ -173,7 +174,7 @@ func TestUserService_UpdateProfile(t *testing.T) {
 
 	ctx := context.Background()
 	userId := "123"
-	req := &service.UpdateProfileRequest{
+	req := &request.UpdateProfileRequest{
 		Nickname: "testuser",
 		Email:    "test@example.com",
 	}
@@ -200,7 +201,7 @@ func TestUserService_UpdateProfile_UserNotFound(t *testing.T) {
 
 	ctx := context.Background()
 	userId := "123"
-	req := &service.UpdateProfileRequest{
+	req := &request.UpdateProfileRequest{
 		Nickname: "testuser",
 		Email:    "test@example.com",
 	}

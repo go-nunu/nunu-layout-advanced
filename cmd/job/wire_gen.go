@@ -9,6 +9,7 @@ package main
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/job"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
+	"github.com/google/wire"
 	"github.com/spf13/viper"
 )
 
@@ -19,3 +20,7 @@ func newApp(viperViper *viper.Viper, logger *log.Logger) (*job.Job, func(), erro
 	return jobJob, func() {
 	}, nil
 }
+
+// wire.go:
+
+var JobSet = wire.NewSet(job.NewJob)

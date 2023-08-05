@@ -1,4 +1,4 @@
-package migration
+package main
 
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"

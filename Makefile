@@ -5,8 +5,8 @@ init:
 
 .PHONY: mock
 mock:
-	mockgen -source=internal/service/user.go -destination mocks/service/user.go
-	mockgen -source=internal/repository/user.go -destination mocks/repository/user.go
+	mockgen -source=internal/service/user.go -destination test/mocks/service/user.go
+	mockgen -source=internal/repository/user.go -destination test/mocks/repository/user.go
 
 .PHONY: test
 test:

@@ -4,7 +4,6 @@
 package main
 
 import (
-	"github.com/go-nunu/nunu-layout-advanced/internal/migration"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/google/wire"
@@ -17,11 +16,10 @@ var RepositorySet = wire.NewSet(
 	repository.NewRepository,
 	repository.NewUserRepository,
 )
-var MigrateSet = wire.NewSet(migration.NewMigrate)
 
-func newApp(*viper.Viper, *log.Logger) (*migration.Migrate, func(), error) {
+func newApp(*viper.Viper, *log.Logger) (*Migrate, func(), error) {
 	panic(wire.Build(
 		RepositorySet,
-		MigrateSet,
+		NewMigrate,
 	))
 }

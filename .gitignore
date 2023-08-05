@@ -1,5 +1,5 @@
 storage
 .idea
 *.log
-deploy/docker-compose/conf
-deploy/docker-compose/data
+scripts/docker-compose/conf
+scripts/docker-compose/data

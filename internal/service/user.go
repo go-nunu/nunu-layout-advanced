@@ -4,38 +4,17 @@ import (
 	"context"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
+	"github.com/go-nunu/nunu-layout-advanced/internal/request"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
-type RegisterRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Email    string `json:"email" binding:"required,email"`
-}
-
-type LoginRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
-type UpdateProfileRequest struct {
-	Nickname string `json:"nickname"`
-	Email    string `json:"email" binding:"required,email"`
-	Avatar   string `json:"avatar"`
-}
-
-type ChangePasswordRequest struct {
-	OldPassword string `json:"oldPassword" binding:"required"`
-	NewPassword string `json:"newPassword" binding:"required"`
-}
-
 type UserService interface {
-	Register(ctx context.Context, req *RegisterRequest) error
-	Login(ctx context.Context, req *LoginRequest) (string, error)
+	Register(ctx context.Context, req *request.RegisterRequest) error
+	Login(ctx context.Context, req *request.LoginRequest) (string, error)
 	GetProfile(ctx context.Context, userId string) (*model.User, error)
-	UpdateProfile(ctx context.Context, userId string, req *UpdateProfileRequest) error
+	UpdateProfile(ctx context.Context, userId string, req *request.UpdateProfileRequest) error
 }
 
 type userService struct {
@@ -50,7 +29,7 @@ func NewUserService(service *Service, userRepo repository.UserRepository) UserSe
 	}
 }
 
-func (s *userService) Register(ctx context.Context, req *RegisterRequest) error {
+func (s *userService) Register(ctx context.Context, req *request.RegisterRequest) error {
 	// 检查用户名是否已存在
 	if user, err := s.userRepo.GetByUsername(ctx, req.Username); err == nil && user != nil {
 		return errors.New("username already exists")
@@ -79,7 +58,7 @@ func (s *userService) Register(ctx context.Context, req *RegisterRequest) error 
 	return nil
 }
 
-func (s *userService) Login(ctx context.Context, req *LoginRequest) (string, error) {
+func (s *userService) Login(ctx context.Context, req *request.LoginRequest) (string, error) {
 	user, err := s.userRepo.GetByUsername(ctx, req.Username)
 	if err != nil || user == nil {
 		return "", errors.Wrap(err, "failed to get user by username")
@@ -106,7 +85,7 @@ func (s *userService) GetProfile(ctx context.Context, userId string) (*model.Use
 	return user, nil
 }
 
-func (s *userService) UpdateProfile(ctx context.Context, userId string, req *UpdateProfileRequest) error {
+func (s *userService) UpdateProfile(ctx context.Context, userId string, req *request.UpdateProfileRequest) error {
 	user, err := s.userRepo.GetByID(ctx, userId)
 	if err != nil {
 		return errors.Wrap(err, "failed to get user by ID")

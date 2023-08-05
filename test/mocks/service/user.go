@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	model "github.com/go-nunu/nunu-layout-advanced/internal/model"
-	service "github.com/go-nunu/nunu-layout-advanced/internal/service"
+	request "github.com/go-nunu/nunu-layout-advanced/internal/request"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -52,7 +52,7 @@ func (mr *MockUserServiceMockRecorder) GetProfile(ctx, userId interface{}) *gomo
 }
 
 // Login mocks base method.
-func (m *MockUserService) Login(ctx context.Context, req *service.LoginRequest) (string, error) {
+func (m *MockUserService) Login(ctx context.Context, req *request.LoginRequest) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", ctx, req)
 	ret0, _ := ret[0].(string)
@@ -67,7 +67,7 @@ func (mr *MockUserServiceMockRecorder) Login(ctx, req interface{}) *gomock.Call 
 }
 
 // Register mocks base method.
-func (m *MockUserService) Register(ctx context.Context, req *service.RegisterRequest) error {
+func (m *MockUserService) Register(ctx context.Context, req *request.RegisterRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Register", ctx, req)
 	ret0, _ := ret[0].(error)
@@ -81,7 +81,7 @@ func (mr *MockUserServiceMockRecorder) Register(ctx, req interface{}) *gomock.Ca
 }
 
 // UpdateProfile mocks base method.
-func (m *MockUserService) UpdateProfile(ctx context.Context, userId string, req *service.UpdateProfileRequest) error {
+func (m *MockUserService) UpdateProfile(ctx context.Context, userId string, req *request.UpdateProfileRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProfile", ctx, userId, req)
 	ret0, _ := ret[0].(error)

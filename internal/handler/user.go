@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-nunu/nunu-layout-advanced/internal/request"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
 	"github.com/pkg/errors"
@@ -28,7 +29,7 @@ func NewUserHandler(handler *Handler, userService service.UserService) UserHandl
 }
 
 func (h *userHandler) Register(ctx *gin.Context) {
-	req := new(service.RegisterRequest)
+	req := new(request.RegisterRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
 		return
@@ -43,7 +44,7 @@ func (h *userHandler) Register(ctx *gin.Context) {
 }
 
 func (h *userHandler) Login(ctx *gin.Context) {
-	var req service.LoginRequest
+	var req request.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
 		return
@@ -79,7 +80,7 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 func (h *userHandler) UpdateProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 
-	var req service.UpdateProfileRequest
+	var req request.UpdateProfileRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
 		return
