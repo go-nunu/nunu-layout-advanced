@@ -4,7 +4,6 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
@@ -33,11 +32,12 @@ var RepositorySet = wire.NewSet(
 	repository.NewUserRepository,
 )
 
-func newApp(*viper.Viper, *log.Logger) (*gin.Engine, func(), error) {
+func newApp(*viper.Viper, *log.Logger) (*server.Server, func(), error) {
 	panic(wire.Build(
 		RepositorySet,
 		ServiceSet,
 		HandlerSet,
+		server.NewServer,
 		server.NewServerHTTP,
 		sid.NewSid,
 		jwt.NewJwt,

@@ -16,11 +16,6 @@ type UserHandler interface {
 	UpdateProfile(ctx *gin.Context)
 }
 
-type userHandler struct {
-	*Handler
-	userService service.UserService
-}
-
 func NewUserHandler(handler *Handler, userService service.UserService) UserHandler {
 	return &userHandler{
 		Handler:     handler,
@@ -28,6 +23,20 @@ func NewUserHandler(handler *Handler, userService service.UserService) UserHandl
 	}
 }
 
+type userHandler struct {
+	*Handler
+	userService service.UserService
+}
+
+// Register godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {string} Helloworld
+// @Router /example/helloworld [get]
 func (h *userHandler) Register(ctx *gin.Context) {
 	req := new(request.RegisterRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {

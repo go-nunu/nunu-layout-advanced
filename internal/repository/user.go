@@ -14,15 +14,16 @@ type UserRepository interface {
 	GetByUsername(ctx context.Context, username string) (*model.User, error)
 }
 
-type userRepository struct {
-	*Repository
-}
-
 func NewUserRepository(r *Repository) UserRepository {
 	return &userRepository{
 		Repository: r,
 	}
 }
+
+type userRepository struct {
+	*Repository
+}
+
 func (r *userRepository) Create(ctx context.Context, user *model.User) error {
 	if err := r.db.Create(user).Error; err != nil {
 		return errors.Wrap(err, "failed to create user")

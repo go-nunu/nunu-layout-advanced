@@ -17,16 +17,16 @@ type UserService interface {
 	UpdateProfile(ctx context.Context, userId string, req *request.UpdateProfileRequest) error
 }
 
-type userService struct {
-	userRepo repository.UserRepository
-	*Service
-}
-
 func NewUserService(service *Service, userRepo repository.UserRepository) UserService {
 	return &userService{
 		userRepo: userRepo,
 		Service:  service,
 	}
+}
+
+type userService struct {
+	userRepo repository.UserRepository
+	*Service
 }
 
 func (s *userService) Register(ctx context.Context, req *request.RegisterRequest) error {

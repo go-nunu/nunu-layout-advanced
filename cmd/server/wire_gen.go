@@ -7,7 +7,6 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
@@ -21,7 +20,7 @@ import (
 
 // Injectors from wire.go:
 
-func newApp(viperViper *viper.Viper, logger *log.Logger) (*gin.Engine, func(), error) {
+func newApp(viperViper *viper.Viper, logger *log.Logger) (*server.Server, func(), error) {
 	jwtJWT := jwt.NewJwt(viperViper)
 	handlerHandler := handler.NewHandler(logger)
 	sidSid := sid.NewSid()
@@ -33,7 +32,8 @@ func newApp(viperViper *viper.Viper, logger *log.Logger) (*gin.Engine, func(), e
 	userService := service.NewUserService(serviceService, userRepository)
 	userHandler := handler.NewUserHandler(handlerHandler, userService)
 	engine := server.NewServerHTTP(logger, jwtJWT, userHandler)
-	return engine, func() {
+	serverServer := server.NewServer(engine)
+	return serverServer, func() {
 	}, nil
 }
 
