@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	model "github.com/go-nunu/nunu-layout-advanced/internal/model"
-	request "github.com/go-nunu/nunu-layout-advanced/internal/request"
+	request "github.com/go-nunu/nunu-layout-advanced/internal/pkg/request"
 	gomock "github.com/golang/mock/gomock"
 )
 

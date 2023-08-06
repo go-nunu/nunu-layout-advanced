@@ -1,68 +1,15 @@
 package middleware
 
 import (
-	"net/http"
-	"regexp"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"net/http"
 )
 
-type JWT struct {
-	key []byte
-}
-
-type MyCustomClaims struct {
-	UserId string
-	jwt.RegisteredClaims
-}
-
-func NewJwt(conf *viper.Viper) *JWT {
-	return &JWT{key: []byte(conf.GetString("security.jwt.key"))}
-}
-
-func (j *JWT) GenToken(userId string, expiresAt time.Time) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyCustomClaims{
-		UserId: userId,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expiresAt),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			NotBefore: jwt.NewNumericDate(time.Now()),
-			Issuer:    "",
-			Subject:   "",
-			ID:        "",
-			Audience:  []string{},
-		},
-	})
-
-	// Sign and get the complete encoded token as a string using the key
-	tokenString, err := token.SignedString(j.key)
-	if err != nil {
-		return "", err
-	}
-	return tokenString, nil
-}
-
-func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
-	re := regexp.MustCompile(`(?i)Bearer `)
-	tokenString = re.ReplaceAllString(tokenString, "")
-	token, err := jwt.ParseWithClaims(tokenString, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return j.key, nil
-	})
-
-	if claims, ok := token.Claims.(*MyCustomClaims); ok && token.Valid {
-		return claims, nil
-	} else {
-		return nil, err
-	}
-}
-
-func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
+func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
 		if tokenString == "" {
@@ -92,7 +39,7 @@ func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 	}
 }
 
-func NoStrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
+func NoStrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
 		if tokenString == "" {
@@ -119,6 +66,6 @@ func NoStrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 }
 
 func recoveryLoggerFunc(ctx *gin.Context, logger *log.Logger) {
-	userInfo := ctx.MustGet("claims").(*MyCustomClaims)
+	userInfo := ctx.MustGet("claims").(*jwt.MyCustomClaims)
 	logger.NewContext(ctx, zap.String("UserId", userInfo.UserId))
 }

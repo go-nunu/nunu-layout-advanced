@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout-advanced/internal/request"
+	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/request"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
 	"github.com/pkg/errors"

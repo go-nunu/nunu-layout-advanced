@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
-	"github.com/go-nunu/nunu-layout-advanced/internal/request"
+	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/middleware"
+	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/request"
+	jwt2 "github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/test/mocks/service"
 
 	"net/http"
@@ -14,7 +16,6 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
@@ -29,7 +30,7 @@ var (
 )
 var logger *log.Logger
 var hdl *handler.Handler
-var jwt *middleware.JWT
+var jwt *jwt2.JWT
 var router *gin.Engine
 
 func TestMain(m *testing.M) {
@@ -43,7 +44,7 @@ func TestMain(m *testing.M) {
 	logger = log.NewLog(conf)
 	hdl = handler.NewHandler(logger)
 
-	jwt = middleware.NewJwt(conf)
+	jwt = jwt2.NewJwt(conf)
 	gin.SetMode(gin.TestMode)
 	router = gin.Default()
 	router.Use(

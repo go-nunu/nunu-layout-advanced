@@ -6,11 +6,11 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
-	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/sid"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
@@ -40,6 +40,6 @@ func newApp(*viper.Viper, *log.Logger) (*gin.Engine, func(), error) {
 		HandlerSet,
 		server.NewServerHTTP,
 		sid.NewSid,
-		middleware.NewJwt,
+		jwt.NewJwt,
 	))
 }

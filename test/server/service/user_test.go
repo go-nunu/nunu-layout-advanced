@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/go-nunu/nunu-layout-advanced/internal/request"
+	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/request"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/test/mocks/repository"
 	"os"
 	"testing"
 
-	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
@@ -35,7 +35,7 @@ func TestMain(m *testing.M) {
 	conf := config.NewConfig()
 
 	logger := log.NewLog(conf)
-	jwt := middleware.NewJwt(conf)
+	jwt := jwt.NewJwt(conf)
 	sf := sid.NewSid()
 	srv = service.NewService(logger, sf, jwt)
 
