@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main
+package wire
 
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
@@ -20,7 +20,7 @@ import (
 
 // Injectors from wire.go:
 
-func newApp(viperViper *viper.Viper, logger *log.Logger) (*server.Server, func(), error) {
+func NewApp(viperViper *viper.Viper, logger *log.Logger) (*server.Server, func(), error) {
 	jwtJWT := jwt.NewJwt(viperViper)
 	handlerHandler := handler.NewHandler(logger)
 	sidSid := sid.NewSid()

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/request"
+	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/response"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
@@ -30,9 +31,9 @@ type userService struct {
 }
 
 func (s *userService) Register(ctx context.Context, req *request.RegisterRequest) error {
-	// 检查用户名是否已存在
+	// check username
 	if user, err := s.userRepo.GetByUsername(ctx, req.Username); err == nil && user != nil {
-		return errors.New("username already exists")
+		return response.ErrUsernameAlreadyUse
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)

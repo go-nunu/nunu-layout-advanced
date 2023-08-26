@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/middleware"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/resp"
+	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/response"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 )
@@ -30,8 +30,8 @@ func NewServerHTTP(
 
 		noAuthRouter.GET("/", func(ctx *gin.Context) {
 			logger.WithContext(ctx).Info("hello")
-			resp.HandleSuccess(ctx, map[string]interface{}{
-				"say": "Hi Nunu!",
+			response.HandleSuccess(ctx, map[string]interface{}{
+				":)": "Thank you for using nunu!",
 			})
 		})
 

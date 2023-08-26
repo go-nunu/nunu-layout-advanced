@@ -3,7 +3,7 @@ RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk
 
 ARG APP_RELATIVE_PATH
 
-COPY ../../deploy /data/app
+COPY .. /data/app
 WORKDIR /data/app
 
 RUN rm -rf /data/app/bin/

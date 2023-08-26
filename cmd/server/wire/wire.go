@@ -1,7 +1,7 @@
 //go:build wireinject
 // +build wireinject
 
-package main
+package wire
 
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
@@ -32,7 +32,7 @@ var RepositorySet = wire.NewSet(
 	repository.NewUserRepository,
 )
 
-func newApp(*viper.Viper, *log.Logger) (*server.Server, func(), error) {
+func NewApp(*viper.Viper, *log.Logger) (*server.Server, func(), error) {
 	panic(wire.Build(
 		RepositorySet,
 		ServiceSet,

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
+	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/response"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
@@ -42,7 +43,9 @@ func (r *userRepository) Update(ctx context.Context, user *model.User) error {
 func (r *userRepository) GetByID(ctx context.Context, userId string) (*model.User, error) {
 	var user model.User
 	if err := r.db.Where("user_id = ?", userId).First(&user).Error; err != nil {
-
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, response.ErrNotFound
+		}
 		return nil, errors.Wrap(err, "failed to get user by ID")
 	}
 
@@ -52,7 +55,7 @@ func (r *userRepository) GetByID(ctx context.Context, userId string) (*model.Use
 func (r *userRepository) GetByUsername(ctx context.Context, username string) (*model.User, error) {
 	var user model.User
 	if err := r.db.Where("username = ?", username).First(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, errors.Wrap(err, "failed to get user by username")

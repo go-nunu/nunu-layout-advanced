@@ -28,7 +28,7 @@ func NewRepository(db *gorm.DB, rdb *redis.Client, logger *log.Logger) *Reposito
 func NewDB(conf *viper.Viper) *gorm.DB {
 	db, err := gorm.Open(mysql.Open(conf.GetString("data.mysql.user")), &gorm.Config{})
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("mysql error: %s", err.Error()))
 	}
 	return db
 }

@@ -4,9 +4,10 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main
+package wire
 
 import (
+	"github.com/go-nunu/nunu-layout-advanced/cmd/migration/internal"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/google/wire"
@@ -15,9 +16,9 @@ import (
 
 // Injectors from wire.go:
 
-func newApp(viperViper *viper.Viper, logger *log.Logger) (*Migrate, func(), error) {
+func NewApp(viperViper *viper.Viper, logger *log.Logger) (*internal.Migrate, func(), error) {
 	db := repository.NewDB(viperViper)
-	migrate := NewMigrate(db, logger)
+	migrate := internal.NewMigrate(db, logger)
 	return migrate, func() {
 	}, nil
 }
