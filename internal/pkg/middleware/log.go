@@ -2,15 +2,12 @@ package middleware
 
 import (
 	"bytes"
-	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/md5"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/uuid"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"go.uber.org/zap"
 	"io"
-	"strconv"
 	"time"
 )
 
@@ -21,8 +18,7 @@ func RequestLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 		trace := md5.Md5(uuid.GenUUID())
 		logger.NewContext(ctx, zap.String("trace", trace))
 		logger.NewContext(ctx, zap.String("request_method", ctx.Request.Method))
-		headers, _ := json.Marshal(ctx.Request.Header)
-		logger.NewContext(ctx, zap.String("request_headers", string(headers)))
+		logger.NewContext(ctx, zap.Any("request_headers", ctx.Request.Header))
 		logger.NewContext(ctx, zap.String("request_url", ctx.Request.URL.String()))
 		if ctx.Request.Body != nil {
 			bodyBytes, _ := ctx.GetRawData()
@@ -39,9 +35,9 @@ func ResponseLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 		ctx.Writer = blw
 		startTime := time.Now()
 		ctx.Next()
-		duration := int(time.Since(startTime).Milliseconds())
-		ctx.Header("X-Response-Time", strconv.Itoa(duration))
-		logger.WithContext(ctx).Info("Response", zap.Any("response_body", blw.body.String()), zap.Any("time", fmt.Sprintf("%sms", strconv.Itoa(duration))))
+		duration := time.Since(startTime).String()
+		ctx.Header("X-Response-Time", duration)
+		logger.WithContext(ctx).Info("Response", zap.Any("response_body", blw.body.String()), zap.Any("time", duration))
 	}
 }
 
