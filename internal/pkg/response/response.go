@@ -16,7 +16,7 @@ func HandleSuccess(ctx *gin.Context, data interface{}) {
 	if data == nil {
 		data = map[string]string{}
 	}
-	resp := response{Code: ErrSuccess.Code, Message: ErrSuccess.Message, Data: data}
+	resp := response{Code: errorCodeMap[ErrSuccess], Message: ErrSuccess.Error(), Data: data}
 	ctx.JSON(http.StatusOK, resp)
 }
 
@@ -35,13 +35,10 @@ type Error struct {
 
 var errorCodeMap = map[error]int{}
 
-func newError(code int, msg string) *Error {
+func newError(code int, msg string) error {
 	err := errors.New(msg)
 	errorCodeMap[err] = code
-	return &Error{
-		Code:    code,
-		Message: msg,
-	}
+	return err
 }
 func (e Error) Error() string {
 	return e.Message
