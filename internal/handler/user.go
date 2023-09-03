@@ -28,14 +28,15 @@ type userHandler struct {
 }
 
 // Register godoc
-// @Summary ping example
+// @Summary 用户注册
 // @Schemes
-// @Description do ping
-// @Tags example
+// @Description 目前只支持邮箱登录
+// @Tags 用户模块
 // @Accept json
 // @Produce json
-// @Success 200 {string} Helloworld
-// @Router /example/helloworld [get]
+// @Param request body request.RegisterRequest true "params"
+// @Success 200 {object} response.Response
+// @Router /register [post]
 func (h *userHandler) Register(ctx *gin.Context) {
 	req := new(request.RegisterRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
@@ -51,6 +52,16 @@ func (h *userHandler) Register(ctx *gin.Context) {
 	response.HandleSuccess(ctx, nil)
 }
 
+// Login godoc
+// @Summary 账号登录
+// @Schemes
+// @Description
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Param request body request.LoginRequest true "params"
+// @Success 200 {object} response.Response
+// @Router /login [post]
 func (h *userHandler) Login(ctx *gin.Context) {
 	var req request.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -69,6 +80,16 @@ func (h *userHandler) Login(ctx *gin.Context) {
 	})
 }
 
+// GetProfile godoc
+// @Summary 获取用户信息
+// @Schemes
+// @Description
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Success 200 {object} response.Response
+// @Router /user [get]
 func (h *userHandler) GetProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 	if userId == "" {

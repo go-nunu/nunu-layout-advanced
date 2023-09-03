@@ -1,23 +1,18 @@
 package request
 
 type RegisterRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Email    string `json:"email" binding:"required,email"`
+	Username string `json:"username" binding:"required" example:"alan"`
+	Password string `json:"password" binding:"required" example:"123456"`
+	Email    string `json:"email" binding:"required,email" example:"1234@gmail.com"`
 }
 
 type LoginRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username string `json:"username" binding:"required" example:"alan"`
+	Password string `json:"password" binding:"required" example:"123456"`
 }
 
 type UpdateProfileRequest struct {
-	Nickname string `json:"nickname"`
-	Email    string `json:"email" binding:"required,email"`
-	Avatar   string `json:"avatar"`
-}
-
-type ChangePasswordRequest struct {
-	OldPassword string `json:"oldPassword" binding:"required"`
-	NewPassword string `json:"newPassword" binding:"required"`
+	Nickname string `json:"nickname" example:"alan"`
+	Email    string `json:"email" binding:"required,email" example:"1234@gmail.com"`
+	Avatar   string `json:"avatar" example:"xxxx"`
 }

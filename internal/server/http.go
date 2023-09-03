@@ -2,11 +2,14 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-nunu/nunu-layout-advanced/docs"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/response"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewServerHTTP(
@@ -16,6 +19,14 @@ func NewServerHTTP(
 ) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+
+	// swagger doc
+	docs.SwaggerInfo.BasePath = "/"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(
+		swaggerfiles.Handler,
+		//ginSwagger.URL(fmt.Sprintf("http://localhost:%d/swagger/doc.json", conf.GetInt("app.http.port"))),
+		ginSwagger.DefaultModelsExpandDepth(-1),
+	))
 
 	r.Use(
 		middleware.CORSMiddleware(),
