@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"moul.io/zapgorm2"
 	"time"
 )
 
@@ -25,11 +26,14 @@ func NewRepository(db *gorm.DB, rdb *redis.Client, logger *log.Logger) *Reposito
 	}
 }
 
-func NewDB(conf *viper.Viper) *gorm.DB {
-	db, err := gorm.Open(mysql.Open(conf.GetString("data.mysql.user")), &gorm.Config{})
+func NewDB(conf *viper.Viper, l *log.Logger) *gorm.DB {
+	logger := zapgorm2.New(l.Logger)
+	logger.SetAsDefault()
+	db, err := gorm.Open(mysql.Open(conf.GetString("data.mysql.user")), &gorm.Config{Logger: logger})
 	if err != nil {
-		panic(fmt.Sprintf("mysql error: %s", err.Error()))
+		panic(err)
 	}
+	db = db.Debug()
 	return db
 }
 func NewRedis(conf *viper.Viper) *redis.Client {

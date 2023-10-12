@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/response"
+	"github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"go.uber.org/zap"
@@ -17,7 +17,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			response.HandleError(ctx, http.StatusUnauthorized, response.ErrUnauthorized, nil)
+			v1.HandleError(ctx, http.StatusUnauthorized, v1.ErrUnauthorized, nil)
 			ctx.Abort()
 			return
 		}
@@ -27,8 +27,8 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 			logger.WithContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
-			}))
-			response.HandleError(ctx, http.StatusUnauthorized, response.ErrUnauthorized, nil)
+			}), zap.Error(err))
+			v1.HandleError(ctx, http.StatusUnauthorized, v1.ErrUnauthorized, nil)
 			ctx.Abort()
 			return
 		}

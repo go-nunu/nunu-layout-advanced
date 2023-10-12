@@ -8,8 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	model "github.com/go-nunu/nunu-layout-advanced/internal/model"
-	request "github.com/go-nunu/nunu-layout-advanced/internal/pkg/request"
+	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -37,10 +36,10 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 }
 
 // GetProfile mocks base method.
-func (m *MockUserService) GetProfile(ctx context.Context, userId string) (*model.User, error) {
+func (m *MockUserService) GetProfile(ctx context.Context, userId string) (*v1.GetProfileResponseData, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetProfile", ctx, userId)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*v1.GetProfileResponseData)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -52,7 +51,7 @@ func (mr *MockUserServiceMockRecorder) GetProfile(ctx, userId interface{}) *gomo
 }
 
 // Login mocks base method.
-func (m *MockUserService) Login(ctx context.Context, req *request.LoginRequest) (string, error) {
+func (m *MockUserService) Login(ctx context.Context, req *v1.LoginRequest) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", ctx, req)
 	ret0, _ := ret[0].(string)
@@ -67,7 +66,7 @@ func (mr *MockUserServiceMockRecorder) Login(ctx, req interface{}) *gomock.Call 
 }
 
 // Register mocks base method.
-func (m *MockUserService) Register(ctx context.Context, req *request.RegisterRequest) error {
+func (m *MockUserService) Register(ctx context.Context, req *v1.RegisterRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Register", ctx, req)
 	ret0, _ := ret[0].(error)
@@ -81,7 +80,7 @@ func (mr *MockUserServiceMockRecorder) Register(ctx, req interface{}) *gomock.Ca
 }
 
 // UpdateProfile mocks base method.
-func (m *MockUserService) UpdateProfile(ctx context.Context, userId string, req *request.UpdateProfileRequest) error {
+func (m *MockUserService) UpdateProfile(ctx context.Context, userId string, req *v1.UpdateProfileRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProfile", ctx, userId, req)
 	ret0, _ := ret[0].(error)

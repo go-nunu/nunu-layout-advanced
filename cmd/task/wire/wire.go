@@ -4,7 +4,6 @@
 package wire
 
 import (
-	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/app"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
@@ -12,25 +11,19 @@ import (
 	"github.com/spf13/viper"
 )
 
-var repositorySet = wire.NewSet(
-	repository.NewDB,
-	repository.NewRedis,
-	repository.NewRepository,
-	repository.NewUserRepository,
-)
+var taskSet = wire.NewSet(server.NewTask)
 
 // build App
-func newApp(migrate *server.Migrate) *app.App {
+func newApp(task *server.Task) *app.App {
 	return app.NewApp(
-		app.WithServer(migrate),
-		app.WithName("demo-migrate"),
+		app.WithServer(task),
+		app.WithName("demo-task"),
 	)
 }
 
 func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
 	panic(wire.Build(
-		repositorySet,
-		server.NewMigrate,
+		taskSet,
 		newApp,
 	))
 }

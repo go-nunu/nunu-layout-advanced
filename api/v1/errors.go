@@ -1,4 +1,4 @@
-package response
+package v1
 
 var (
 	// common errors

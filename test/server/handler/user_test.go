@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
-	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/middleware"
-	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/request"
+	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	jwt2 "github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/test/mocks/service"
+	"time"
 
 	"net/http"
 	"net/http/httptest"
@@ -16,7 +17,6 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/golang/mock/gomock"
@@ -24,9 +24,7 @@ import (
 )
 
 var (
-	userId = "yhs6HesfgF"
-
-	token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ5aHM2SGVzZmdGIiwiZXhwIjoxNjkzOTE0ODgwLCJuYmYiOjE2ODYxMzg4ODAsImlhdCI6MTY4NjEzODg4MH0.NnFrZFgc_333a9PXqaoongmIDksNvQoHzgM_IhJM4MQ"
+	userId = "xxx"
 )
 var logger *log.Logger
 var hdl *handler.Handler
@@ -64,7 +62,7 @@ func TestUserHandler_Register(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	params := request.RegisterRequest{
+	params := v1.RegisterRequest{
 		Username: "xxx",
 		Password: "123456",
 		Email:    "xxx@gmail.com",
@@ -88,13 +86,13 @@ func TestUserHandler_Login(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	params := request.LoginRequest{
+	params := v1.LoginRequest{
 		Username: "xxx",
 		Password: "123456",
 	}
 
 	mockUserService := mock_service.NewMockUserService(ctrl)
-	mockUserService.EXPECT().Login(gomock.Any(), &params).Return(token, nil)
+	mockUserService.EXPECT().Login(gomock.Any(), &params).Return("", nil)
 
 	userHandler := handler.NewUserHandler(hdl, mockUserService)
 	router.POST("/login", userHandler.Login)
@@ -111,20 +109,17 @@ func TestUserHandler_GetProfile(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockUserService := mock_service.NewMockUserService(ctrl)
-	mockUserService.EXPECT().GetProfile(gomock.Any(), userId).Return(&model.User{
-		Id:       1,
+	mockUserService.EXPECT().GetProfile(gomock.Any(), userId).Return(&v1.GetProfileResponseData{
 		UserId:   userId,
 		Username: "xxxxx",
 		Nickname: "xxxxx",
-		Password: "xxxxx",
-		Email:    "xxxxx@gmail.com",
 	}, nil)
 
 	userHandler := handler.NewUserHandler(hdl, mockUserService)
 	router.Use(middleware.NoStrictAuth(jwt, logger))
 	router.GET("/user", userHandler.GetProfile)
 	req, _ := http.NewRequest("GET", "/user", nil)
-	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Authorization", "Bearer "+genToken(t))
 
 	resp := httptest.NewRecorder()
 
@@ -137,7 +132,7 @@ func TestUserHandler_UpdateProfile(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	params := request.UpdateProfileRequest{
+	params := v1.UpdateProfileRequest{
 		Nickname: "alan",
 		Email:    "alan@gmail.com",
 		Avatar:   "xxx",
@@ -152,7 +147,7 @@ func TestUserHandler_UpdateProfile(t *testing.T) {
 	paramsJson, _ := json.Marshal(params)
 
 	req, _ := http.NewRequest("PUT", "/user", bytes.NewBuffer(paramsJson))
-	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Authorization", "Bearer "+genToken(t))
 	req.Header.Set("Content-Type", "application/json")
 	resp := httptest.NewRecorder()
 
@@ -167,4 +162,12 @@ func performRequest(r http.Handler, method, path string, body *bytes.Buffer) *ht
 	resp := httptest.NewRecorder()
 	r.ServeHTTP(resp, req)
 	return resp
+}
+func genToken(t *testing.T) string {
+	token, err := jwt.GenToken(userId, time.Now().Add(time.Hour*24*90))
+	if err != nil {
+		t.Error(err)
+		return token
+	}
+	return token
 }

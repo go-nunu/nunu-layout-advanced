@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
+	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
-	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/response"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
@@ -44,7 +44,7 @@ func (r *userRepository) GetByID(ctx context.Context, userId string) (*model.Use
 	var user model.User
 	if err := r.db.Where("user_id = ?", userId).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, response.ErrNotFound
+			return nil, v1.ErrNotFound
 		}
 		return nil, errors.Wrap(err, "failed to get user by ID")
 	}

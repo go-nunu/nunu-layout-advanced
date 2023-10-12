@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/go-nunu/nunu-layout-advanced/internal/pkg/request"
+	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/test/mocks/repository"
 	"os"
@@ -54,7 +54,7 @@ func TestUserService_Register(t *testing.T) {
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
-	req := &request.RegisterRequest{
+	req := &v1.RegisterRequest{
 		Username: "testuser",
 		Password: "password",
 		Email:    "test@example.com",
@@ -77,7 +77,7 @@ func TestUserService_Register_UsernameExists(t *testing.T) {
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
-	req := &request.RegisterRequest{
+	req := &v1.RegisterRequest{
 		Username: "testuser",
 		Password: "password",
 		Email:    "test@example.com",
@@ -99,7 +99,7 @@ func TestUserService_Login(t *testing.T) {
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
-	req := &request.LoginRequest{
+	req := &v1.LoginRequest{
 		Username: "testuser",
 		Password: "password",
 	}
@@ -127,7 +127,7 @@ func TestUserService_Login_UserNotFound(t *testing.T) {
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
-	req := &request.LoginRequest{
+	req := &v1.LoginRequest{
 		Username: "testuser",
 		Password: "password",
 	}
@@ -161,7 +161,6 @@ func TestUserService_GetProfile(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, userId, user.UserId)
 	assert.Equal(t, "testuser", user.Username)
-	assert.Equal(t, "test@example.com", user.Email)
 }
 
 func TestUserService_UpdateProfile(t *testing.T) {
@@ -174,7 +173,7 @@ func TestUserService_UpdateProfile(t *testing.T) {
 
 	ctx := context.Background()
 	userId := "123"
-	req := &request.UpdateProfileRequest{
+	req := &v1.UpdateProfileRequest{
 		Nickname: "testuser",
 		Email:    "test@example.com",
 	}
@@ -201,7 +200,7 @@ func TestUserService_UpdateProfile_UserNotFound(t *testing.T) {
 
 	ctx := context.Background()
 	userId := "123"
-	req := &request.UpdateProfileRequest{
+	req := &v1.UpdateProfileRequest{
 		Nickname: "testuser",
 		Email:    "test@example.com",
 	}

@@ -13,7 +13,6 @@ import (
 
 func RequestLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-
 		// The configuration is initialized once per request
 		trace := md5.Md5(uuid.GenUUID())
 		logger.NewContext(ctx, zap.String("trace", trace))

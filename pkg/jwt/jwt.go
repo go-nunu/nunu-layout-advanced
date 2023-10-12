@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"github.com/pkg/errors"
 	"regexp"
 	"time"
 
@@ -46,10 +47,12 @@ func (j *JWT) GenToken(userId string, expiresAt time.Time) (string, error) {
 func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
 	re := regexp.MustCompile(`(?i)Bearer `)
 	tokenString = re.ReplaceAllString(tokenString, "")
+	if tokenString == "" {
+		return nil, errors.New("token is empty")
+	}
 	token, err := jwt.ParseWithClaims(tokenString, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return j.key, nil
 	})
-
 	if claims, ok := token.Claims.(*MyCustomClaims); ok && token.Valid {
 		return claims, nil
 	} else {
