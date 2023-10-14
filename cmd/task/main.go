@@ -2,13 +2,17 @@ package main
 
 import (
 	"context"
+	"flag"
 	"github.com/go-nunu/nunu-layout-advanced/cmd/task/wire"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 )
 
 func main() {
-	conf := config.NewConfig()
+	var envConf = flag.String("conf", "config/local.yml", "config path, eg: -conf ./config/local.yml")
+	flag.Parse()
+	conf := config.NewConfig(*envConf)
+
 	logger := log.NewLog(conf)
 	logger.Info("start task")
 	app, cleanup, err := wire.NewWire(conf, logger)

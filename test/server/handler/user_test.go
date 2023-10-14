@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
@@ -37,7 +38,9 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		fmt.Println("Setenv error", err)
 	}
-	conf := config.NewConfig()
+	var envConf = flag.String("conf", "config/local.yml", "config path, eg: -conf ./config/local.yml")
+	flag.Parse()
+	conf := config.NewConfig(*envConf)
 
 	logger = log.NewLog(conf)
 	hdl = handler.NewHandler(logger)

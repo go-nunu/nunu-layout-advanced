@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"errors"
+	"flag"
 	"fmt"
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
@@ -32,7 +33,9 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 
-	conf := config.NewConfig()
+	var envConf = flag.String("conf", "config/local.yml", "config path, eg: -conf ./config/local.yml")
+	flag.Parse()
+	conf := config.NewConfig(*envConf)
 
 	logger := log.NewLog(conf)
 	jwt := jwt.NewJwt(conf)
