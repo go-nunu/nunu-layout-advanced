@@ -29,6 +29,7 @@ func WithServer(servers ...server.Server) Option {
 		a.servers = servers
 	}
 }
+
 func WithName(name string) Option {
 	return func(a *App) {
 		a.name = name
@@ -36,9 +37,13 @@ func WithName(name string) Option {
 }
 
 func (a *App) Run(ctx context.Context) error {
-	ctx, cancel := context.WithCancel(ctx)
+	var cancel context.CancelFunc
+	ctx, cancel = context.WithCancel(ctx)
+	defer cancel()
+
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
+
 	endpoints := make([]string, 0)
 	for _, srv := range a.servers {
 		if s, ok := srv.(server.Endpointer); ok {
@@ -48,21 +53,29 @@ func (a *App) Run(ctx context.Context) error {
 			}
 			endpoints = append(endpoints, e.String())
 		}
+
 		go func(srv server.Server) {
 			err := srv.Start(ctx)
 			if err != nil {
-				cancel()
-				log.Fatal("app start err:", err)
+				log.Printf("Server start err: %v", err)
 			}
 		}(srv)
 	}
 
-	<-signals
-	cancel()
+	select {
+	case <-signals:
+		// Received termination signal
+		log.Println("Received termination signal")
+	case <-ctx.Done():
+		// Context canceled
+		log.Println("Context canceled")
+	}
+
+	// Gracefully stop the servers
 	for _, srv := range a.servers {
 		err := srv.Stop(ctx)
 		if err != nil {
-			log.Fatal("app stop err:", err)
+			log.Printf("Server stop err: %v", err)
 		}
 	}
 

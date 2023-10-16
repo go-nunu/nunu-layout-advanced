@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"github.com/pkg/errors"
+	"errors"
 	"regexp"
 	"time"
 

@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
+	"errors"
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
-	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -27,14 +27,14 @@ type userRepository struct {
 
 func (r *userRepository) Create(ctx context.Context, user *model.User) error {
 	if err := r.db.Create(user).Error; err != nil {
-		return errors.Wrap(err, "failed to create user")
+		return err
 	}
 	return nil
 }
 
 func (r *userRepository) Update(ctx context.Context, user *model.User) error {
 	if err := r.db.Save(user).Error; err != nil {
-		return errors.Wrap(err, "failed to update user")
+		return err
 	}
 
 	return nil
@@ -46,7 +46,7 @@ func (r *userRepository) GetByID(ctx context.Context, userId string) (*model.Use
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, v1.ErrNotFound
 		}
-		return nil, errors.Wrap(err, "failed to get user by ID")
+		return nil, err
 	}
 
 	return &user, nil
@@ -58,7 +58,7 @@ func (r *userRepository) GetByUsername(ctx context.Context, username string) (*m
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
-		return nil, errors.Wrap(err, "failed to get user by username")
+		return nil, err
 	}
 
 	return &user, nil

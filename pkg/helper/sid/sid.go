@@ -2,7 +2,6 @@ package sid
 
 import (
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/convert"
-	"github.com/pkg/errors"
 	"github.com/sony/sonyflake"
 )
 
@@ -20,7 +19,7 @@ func NewSid() *Sid {
 func (s Sid) GenString() (string, error) {
 	id, err := s.sf.NextID()
 	if err != nil {
-		return "", errors.Wrap(err, "failed to generate sonyflake ID")
+		return "", err
 	}
 	return convert.IntToBase62(int(id)), nil
 }

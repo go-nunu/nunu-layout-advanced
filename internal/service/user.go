@@ -5,7 +5,6 @@ import (
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
-	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -37,12 +36,12 @@ func (s *userService) Register(ctx context.Context, req *v1.RegisterRequest) err
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return errors.Wrap(err, "failed to hash password")
+		return err
 	}
 	// Generate user ID
 	userId, err := s.sid.GenString()
 	if err != nil {
-		return errors.Wrap(err, "failed to generate user ID")
+		return err
 	}
 	// Create a user
 	user := &model.User{
@@ -53,7 +52,7 @@ func (s *userService) Register(ctx context.Context, req *v1.RegisterRequest) err
 		Email:    req.Email,
 	}
 	if err = s.userRepo.Create(ctx, user); err != nil {
-		return errors.Wrap(err, "failed to create user")
+		return err
 	}
 
 	return nil
@@ -67,11 +66,11 @@ func (s *userService) Login(ctx context.Context, req *v1.LoginRequest) (string, 
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
-		return "", errors.Wrap(err, "failed to hash password")
+		return "", err
 	}
 	token, err := s.jwt.GenToken(user.UserId, time.Now().Add(time.Hour*24*90))
 	if err != nil {
-		return "", errors.Wrap(err, "failed to generate JWT token")
+		return "", err
 	}
 
 	return token, nil
@@ -80,7 +79,7 @@ func (s *userService) Login(ctx context.Context, req *v1.LoginRequest) (string, 
 func (s *userService) GetProfile(ctx context.Context, userId string) (*v1.GetProfileResponseData, error) {
 	user, err := s.userRepo.GetByID(ctx, userId)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get user by ID")
+		return nil, err
 	}
 
 	return &v1.GetProfileResponseData{
@@ -93,14 +92,14 @@ func (s *userService) GetProfile(ctx context.Context, userId string) (*v1.GetPro
 func (s *userService) UpdateProfile(ctx context.Context, userId string, req *v1.UpdateProfileRequest) error {
 	user, err := s.userRepo.GetByID(ctx, userId)
 	if err != nil {
-		return errors.Wrap(err, "failed to get user by ID")
+		return err
 	}
 
 	user.Email = req.Email
 	user.Nickname = req.Nickname
 
 	if err = s.userRepo.Update(ctx, user); err != nil {
-		return errors.Wrap(err, "failed to update user")
+		return err
 	}
 
 	return nil

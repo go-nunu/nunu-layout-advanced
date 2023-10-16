@@ -1,8 +1,8 @@
 package v1
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 	"net/http"
 )
 
