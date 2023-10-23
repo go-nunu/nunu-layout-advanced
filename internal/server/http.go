@@ -50,22 +50,24 @@ func NewHTTPServer(
 	})
 
 	v1 := s.Group("/v1")
-	// No route group has permission
-	noAuthRouter := v1
 	{
-		noAuthRouter.POST("/register", userHandler.Register)
-		noAuthRouter.POST("/login", userHandler.Login)
-	}
-	// Non-strict permission routing group
-	noStrictAuthRouter := v1.Use(middleware.NoStrictAuth(jwt, logger))
-	{
-		noStrictAuthRouter.GET("/user", userHandler.GetProfile)
-	}
+		// No route group has permission
+		noAuthRouter := v1.Group("/")
+		{
+			noAuthRouter.POST("/register", userHandler.Register)
+			noAuthRouter.POST("/login", userHandler.Login)
+		}
+		// Non-strict permission routing group
+		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))
+		{
+			noStrictAuthRouter.GET("/user", userHandler.GetProfile)
+		}
 
-	// Strict permission routing group
-	strictAuthRouter := v1.Use(middleware.StrictAuth(jwt, logger))
-	{
-		strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
+		// Strict permission routing group
+		strictAuthRouter := v1.Group("/").Use(middleware.StrictAuth(jwt, logger))
+		{
+			strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
+		}
 	}
 
 	return s

@@ -44,16 +44,7 @@ func (a *App) Run(ctx context.Context) error {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 
-	endpoints := make([]string, 0)
 	for _, srv := range a.servers {
-		if s, ok := srv.(server.Endpointer); ok {
-			e, err := s.Endpoint()
-			if err != nil {
-				return err
-			}
-			endpoints = append(endpoints, e.String())
-		}
-
 		go func(srv server.Server) {
 			err := srv.Start(ctx)
 			if err != nil {
