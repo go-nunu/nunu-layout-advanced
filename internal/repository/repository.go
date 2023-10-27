@@ -26,6 +26,35 @@ func NewRepository(db *gorm.DB, rdb *redis.Client, logger *log.Logger) *Reposito
 	}
 }
 
+type ctxTransactionKey struct {
+}
+
+func (r *Repository) DB(ctx context.Context) *gorm.DB {
+	v := ctx.Value(ctxTransactionKey{})
+	if v == nil {
+		return r.db.WithContext(ctx)
+	} else {
+		tx, ok := v.(*gorm.DB)
+		if !ok {
+			panic(fmt.Sprintf("invalid transaction type: %T", v))
+		}
+		return tx
+	}
+}
+
+func (r *Repository) WithTransaction(ctx context.Context, fn func(ctx context.Context) error) error {
+	tx := r.db.WithContext(ctx).Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+	ctx = context.WithValue(ctx, ctxTransactionKey{}, tx)
+	if err := fn(ctx); err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
+}
+
 func NewDB(conf *viper.Viper, l *log.Logger) *gorm.DB {
 	logger := zapgorm2.New(l.Logger)
 	logger.SetAsDefault()

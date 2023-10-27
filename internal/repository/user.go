@@ -26,14 +26,14 @@ type userRepository struct {
 }
 
 func (r *userRepository) Create(ctx context.Context, user *model.User) error {
-	if err := r.db.Create(user).Error; err != nil {
+	if err := r.DB(ctx).Create(user).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func (r *userRepository) Update(ctx context.Context, user *model.User) error {
-	if err := r.db.Save(user).Error; err != nil {
+	if err := r.DB(ctx).Save(user).Error; err != nil {
 		return err
 	}
 
@@ -42,7 +42,7 @@ func (r *userRepository) Update(ctx context.Context, user *model.User) error {
 
 func (r *userRepository) GetByID(ctx context.Context, userId string) (*model.User, error) {
 	var user model.User
-	if err := r.db.Where("user_id = ?", userId).First(&user).Error; err != nil {
+	if err := r.DB(ctx).Where("user_id = ?", userId).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, v1.ErrNotFound
 		}
@@ -54,7 +54,7 @@ func (r *userRepository) GetByID(ctx context.Context, userId string) (*model.Use
 
 func (r *userRepository) GetByUsername(ctx context.Context, username string) (*model.User, error) {
 	var user model.User
-	if err := r.db.Where("username = ?", username).First(&user).Error; err != nil {
+	if err := r.DB(ctx).Where("username = ?", username).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
