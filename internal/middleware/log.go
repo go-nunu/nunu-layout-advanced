@@ -15,14 +15,14 @@ func RequestLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// The configuration is initialized once per request
 		trace := md5.Md5(uuid.GenUUID())
-		logger.NewContext(ctx, zap.String("trace", trace))
-		logger.NewContext(ctx, zap.String("request_method", ctx.Request.Method))
-		logger.NewContext(ctx, zap.Any("request_headers", ctx.Request.Header))
-		logger.NewContext(ctx, zap.String("request_url", ctx.Request.URL.String()))
+		logger.WithValue(ctx, zap.String("trace", trace))
+		logger.WithValue(ctx, zap.String("request_method", ctx.Request.Method))
+		logger.WithValue(ctx, zap.Any("request_headers", ctx.Request.Header))
+		logger.WithValue(ctx, zap.String("request_url", ctx.Request.URL.String()))
 		if ctx.Request.Body != nil {
 			bodyBytes, _ := ctx.GetRawData()
 			ctx.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // 关键点
-			logger.NewContext(ctx, zap.String("request_params", string(bodyBytes)))
+			logger.WithValue(ctx, zap.String("request_params", string(bodyBytes)))
 		}
 		logger.WithContext(ctx).Info("Request")
 		ctx.Next()

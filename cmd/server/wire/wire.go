@@ -17,9 +17,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-var handlerSet = wire.NewSet(
-	handler.NewHandler,
-	handler.NewUserHandler,
+var repositorySet = wire.NewSet(
+	repository.NewDB,
+	repository.NewRedis,
+	repository.NewRepository,
+	repository.NewTransaction,
+	repository.NewUserRepository,
 )
 
 var serviceSet = wire.NewSet(
@@ -27,12 +30,11 @@ var serviceSet = wire.NewSet(
 	service.NewUserService,
 )
 
-var repositorySet = wire.NewSet(
-	repository.NewDB,
-	repository.NewRedis,
-	repository.NewRepository,
-	repository.NewUserRepository,
+var handlerSet = wire.NewSet(
+	handler.NewHandler,
+	handler.NewUserHandler,
 )
+
 var serverSet = wire.NewSet(
 	server.NewHTTPServer,
 	server.NewJob,

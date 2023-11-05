@@ -22,7 +22,9 @@ import (
 )
 
 var (
-	srv *service.Service
+	logger *log.Logger
+	j      *jwt.JWT
+	sf     *sid.Sid
 )
 
 func TestMain(m *testing.M) {
@@ -37,10 +39,9 @@ func TestMain(m *testing.M) {
 	flag.Parse()
 	conf := config.NewConfig(*envConf)
 
-	logger := log.NewLog(conf)
-	jwt := jwt.NewJwt(conf)
-	sf := sid.NewSid()
-	srv = service.NewService(logger, sf, jwt)
+	logger = log.NewLog(conf)
+	j = jwt.NewJwt(conf)
+	sf = sid.NewSid()
 
 	code := m.Run()
 	fmt.Println("test end")
@@ -53,18 +54,19 @@ func TestUserService_Register(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockUserRepo := mock_repository.NewMockUserRepository(ctrl)
+	mockTm := mock_repository.NewMockTransaction(ctrl)
+	srv := service.NewService(mockTm, logger, sf, j)
 
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
 	req := &v1.RegisterRequest{
-		Username: "testuser",
 		Password: "password",
 		Email:    "test@example.com",
 	}
 
-	mockUserRepo.EXPECT().GetByUsername(ctx, req.Username).Return(nil, nil)
-	mockUserRepo.EXPECT().Create(ctx, gomock.Any()).Return(nil)
+	mockUserRepo.EXPECT().GetByEmail(ctx, req.Email).Return(nil, nil)
+	mockTm.EXPECT().Transaction(ctx, gomock.Any()).Return(nil)
 
 	err := userService.Register(ctx, req)
 
@@ -76,17 +78,17 @@ func TestUserService_Register_UsernameExists(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockUserRepo := mock_repository.NewMockUserRepository(ctrl)
-
+	mockTm := mock_repository.NewMockTransaction(ctrl)
+	srv := service.NewService(mockTm, logger, sf, j)
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
 	req := &v1.RegisterRequest{
-		Username: "testuser",
 		Password: "password",
 		Email:    "test@example.com",
 	}
 
-	mockUserRepo.EXPECT().GetByUsername(ctx, req.Username).Return(&model.User{}, nil)
+	mockUserRepo.EXPECT().GetByEmail(ctx, req.Email).Return(&model.User{}, nil)
 
 	err := userService.Register(ctx, req)
 
@@ -98,12 +100,13 @@ func TestUserService_Login(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockUserRepo := mock_repository.NewMockUserRepository(ctrl)
-
+	mockTm := mock_repository.NewMockTransaction(ctrl)
+	srv := service.NewService(mockTm, logger, sf, j)
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
 	req := &v1.LoginRequest{
-		Username: "testuser",
+		Email:    "xxx@gmail.com",
 		Password: "password",
 	}
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
@@ -111,7 +114,7 @@ func TestUserService_Login(t *testing.T) {
 		t.Error("failed to hash password")
 	}
 
-	mockUserRepo.EXPECT().GetByUsername(ctx, req.Username).Return(&model.User{
+	mockUserRepo.EXPECT().GetByEmail(ctx, req.Email).Return(&model.User{
 		Password: string(hashedPassword),
 	}, nil)
 
@@ -126,16 +129,17 @@ func TestUserService_Login_UserNotFound(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockUserRepo := mock_repository.NewMockUserRepository(ctrl)
-
+	mockTm := mock_repository.NewMockTransaction(ctrl)
+	srv := service.NewService(mockTm, logger, sf, j)
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
 	req := &v1.LoginRequest{
-		Username: "testuser",
+		Email:    "xxx@gmail.com",
 		Password: "password",
 	}
 
-	mockUserRepo.EXPECT().GetByUsername(ctx, req.Username).Return(nil, errors.New("user not found"))
+	mockUserRepo.EXPECT().GetByEmail(ctx, req.Email).Return(nil, errors.New("user not found"))
 
 	_, err := userService.Login(ctx, req)
 
@@ -147,23 +151,22 @@ func TestUserService_GetProfile(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockUserRepo := mock_repository.NewMockUserRepository(ctrl)
-
+	mockTm := mock_repository.NewMockTransaction(ctrl)
+	srv := service.NewService(mockTm, logger, sf, j)
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
 	userId := "123"
 
 	mockUserRepo.EXPECT().GetByID(ctx, userId).Return(&model.User{
-		UserId:   userId,
-		Username: "testuser",
-		Email:    "test@example.com",
+		UserId: userId,
+		Email:  "test@example.com",
 	}, nil)
 
 	user, err := userService.GetProfile(ctx, userId)
 
 	assert.NoError(t, err)
 	assert.Equal(t, userId, user.UserId)
-	assert.Equal(t, "testuser", user.Username)
 }
 
 func TestUserService_UpdateProfile(t *testing.T) {
@@ -171,7 +174,8 @@ func TestUserService_UpdateProfile(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockUserRepo := mock_repository.NewMockUserRepository(ctrl)
-
+	mockTm := mock_repository.NewMockTransaction(ctrl)
+	srv := service.NewService(mockTm, logger, sf, j)
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()
@@ -182,9 +186,8 @@ func TestUserService_UpdateProfile(t *testing.T) {
 	}
 
 	mockUserRepo.EXPECT().GetByID(ctx, userId).Return(&model.User{
-		UserId:   userId,
-		Username: "testuser",
-		Email:    "old@example.com",
+		UserId: userId,
+		Email:  "old@example.com",
 	}, nil)
 	mockUserRepo.EXPECT().Update(ctx, gomock.Any()).Return(nil)
 
@@ -198,7 +201,8 @@ func TestUserService_UpdateProfile_UserNotFound(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockUserRepo := mock_repository.NewMockUserRepository(ctrl)
-
+	mockTm := mock_repository.NewMockTransaction(ctrl)
+	srv := service.NewService(mockTm, logger, sf, j)
 	userService := service.NewUserService(srv, mockUserRepo)
 
 	ctx := context.Background()

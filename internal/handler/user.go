@@ -2,29 +2,22 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
+	"github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"go.uber.org/zap"
 	"net/http"
 )
 
-type UserHandler interface {
-	Register(ctx *gin.Context)
-	Login(ctx *gin.Context)
-	GetProfile(ctx *gin.Context)
-	UpdateProfile(ctx *gin.Context)
+type UserHandler struct {
+	*Handler
+	userService service.UserService
 }
 
-func NewUserHandler(handler *Handler, userService service.UserService) UserHandler {
-	return &userHandler{
+func NewUserHandler(handler *Handler, userService service.UserService) *UserHandler {
+	return &UserHandler{
 		Handler:     handler,
 		userService: userService,
 	}
-}
-
-type userHandler struct {
-	*Handler
-	userService service.UserService
 }
 
 // Register godoc
@@ -37,7 +30,7 @@ type userHandler struct {
 // @Param request body v1.RegisterRequest true "params"
 // @Success 200 {object} v1.Response
 // @Router /register [post]
-func (h *userHandler) Register(ctx *gin.Context) {
+func (h *UserHandler) Register(ctx *gin.Context) {
 	req := new(v1.RegisterRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
@@ -63,7 +56,7 @@ func (h *userHandler) Register(ctx *gin.Context) {
 // @Param request body v1.LoginRequest true "params"
 // @Success 200 {object} v1.LoginResponse
 // @Router /login [post]
-func (h *userHandler) Login(ctx *gin.Context) {
+func (h *UserHandler) Login(ctx *gin.Context) {
 	var req v1.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
@@ -90,7 +83,7 @@ func (h *userHandler) Login(ctx *gin.Context) {
 // @Security Bearer
 // @Success 200 {object} v1.GetProfileResponse
 // @Router /user [get]
-func (h *userHandler) GetProfile(ctx *gin.Context) {
+func (h *UserHandler) GetProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 	if userId == "" {
 		v1.HandleError(ctx, http.StatusUnauthorized, v1.ErrUnauthorized, nil)
@@ -106,7 +99,7 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 	v1.HandleSuccess(ctx, user)
 }
 
-func (h *userHandler) UpdateProfile(ctx *gin.Context) {
+func (h *UserHandler) UpdateProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 
 	var req v1.UpdateProfileRequest

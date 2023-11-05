@@ -1,6 +1,7 @@
 package log
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -10,17 +11,13 @@ import (
 	"time"
 )
 
-const LOGGER_KEY = "zapLogger"
+const ctxLoggerKey = "zapLogger"
 
 type Logger struct {
 	*zap.Logger
 }
 
 func NewLog(conf *viper.Viper) *Logger {
-	return initZap(conf)
-}
-
-func initZap(conf *viper.Viper) *Logger {
 	// log address "out.log" User-defined
 	lp := conf.GetString("log.log_file_name")
 	lv := conf.GetString("log.log_level")
@@ -86,7 +83,6 @@ func initZap(conf *viper.Viper) *Logger {
 		return &Logger{zap.New(core, zap.Development(), zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))}
 	}
 	return &Logger{zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))}
-
 }
 
 func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
@@ -94,17 +90,22 @@ func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format("2006-01-02 15:04:05.000000000"))
 }
 
-// NewContext Adds a field to the specified context
-func (l *Logger) NewContext(ctx *gin.Context, fields ...zapcore.Field) {
-	ctx.Set(LOGGER_KEY, l.WithContext(ctx).With(fields...))
+// WithValue Adds a field to the specified context
+func (l *Logger) WithValue(ctx context.Context, fields ...zapcore.Field) context.Context {
+	if c, ok := ctx.(*gin.Context); ok {
+		ctx = c.Request.Context()
+		c.Request = c.Request.WithContext(context.WithValue(ctx, ctxLoggerKey, l.WithContext(ctx).With(fields...)))
+		return c
+	}
+	return context.WithValue(ctx, ctxLoggerKey, l.WithContext(ctx).With(fields...))
 }
 
 // WithContext Returns a zap instance from the specified context
-func (l *Logger) WithContext(ctx *gin.Context) *Logger {
-	if ctx == nil {
-		return l
+func (l *Logger) WithContext(ctx context.Context) *Logger {
+	if c, ok := ctx.(*gin.Context); ok {
+		ctx = c.Request.Context()
 	}
-	zl, _ := ctx.Get(LOGGER_KEY)
+	zl := ctx.Value(ctxLoggerKey)
 	ctxLogger, ok := zl.(*zap.Logger)
 	if ok {
 		return &Logger{ctxLogger}

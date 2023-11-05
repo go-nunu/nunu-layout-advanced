@@ -138,7 +138,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "nickname": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "alan"
                 },
                 "userId": {
                     "type": "string"
@@ -148,17 +149,17 @@ const docTemplate = `{
         "github_com_go-nunu_nunu-layout-advanced_api_v1.LoginRequest": {
             "type": "object",
             "required": [
-                "password",
-                "username"
+                "email",
+                "password"
             ],
             "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "1234@gmail.com"
+                },
                 "password": {
                     "type": "string",
                     "example": "123456"
-                },
-                "username": {
-                    "type": "string",
-                    "example": "alan"
                 }
             }
         },
@@ -188,8 +189,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
-                "password",
-                "username"
+                "password"
             ],
             "properties": {
                 "email": {
@@ -199,10 +199,6 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "example": "123456"
-                },
-                "username": {
-                    "type": "string",
-                    "example": "alan"
                 }
             }
         },

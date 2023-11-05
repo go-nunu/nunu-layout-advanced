@@ -18,7 +18,7 @@ func NewHTTPServer(
 	logger *log.Logger,
 	conf *viper.Viper,
 	jwt *jwt.JWT,
-	userHandler handler.UserHandler,
+	userHandler *handler.UserHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(

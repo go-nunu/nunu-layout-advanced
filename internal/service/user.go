@@ -30,8 +30,8 @@ type userService struct {
 
 func (s *userService) Register(ctx context.Context, req *v1.RegisterRequest) error {
 	// check username
-	if user, err := s.userRepo.GetByUsername(ctx, req.Username); err == nil && user != nil {
-		return v1.ErrUsernameAlreadyUse
+	if user, err := s.userRepo.GetByEmail(ctx, req.Email); err == nil && user != nil {
+		return v1.ErrEmailAlreadyUse
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
@@ -43,23 +43,25 @@ func (s *userService) Register(ctx context.Context, req *v1.RegisterRequest) err
 	if err != nil {
 		return err
 	}
-	// Create a user
 	user := &model.User{
 		UserId:   userId,
-		Username: req.Username,
-		Nickname: req.Username,
-		Password: string(hashedPassword),
 		Email:    req.Email,
+		Password: string(hashedPassword),
 	}
-	if err = s.userRepo.Create(ctx, user); err != nil {
-		return err
-	}
-
-	return nil
+	// Transaction demo
+	err = s.tm.Transaction(ctx, func(ctx context.Context) error {
+		// Create a user
+		if err = s.userRepo.Create(ctx, user); err != nil {
+			return err
+		}
+		// TODO: other repo
+		return nil
+	})
+	return err
 }
 
 func (s *userService) Login(ctx context.Context, req *v1.LoginRequest) (string, error) {
-	user, err := s.userRepo.GetByUsername(ctx, req.Username)
+	user, err := s.userRepo.GetByEmail(ctx, req.Email)
 	if err != nil || user == nil {
 		return "", v1.ErrUnauthorized
 	}
@@ -85,7 +87,6 @@ func (s *userService) GetProfile(ctx context.Context, userId string) (*v1.GetPro
 	return &v1.GetProfileResponseData{
 		UserId:   user.UserId,
 		Nickname: user.Nickname,
-		Username: user.Username,
 	}, nil
 }
 

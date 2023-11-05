@@ -11,21 +11,22 @@ definitions:
   github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponseData:
     properties:
       nickname:
+        example: alan
         type: string
       userId:
         type: string
     type: object
   github_com_go-nunu_nunu-layout-advanced_api_v1.LoginRequest:
     properties:
+      email:
+        example: 1234@gmail.com
+        type: string
       password:
         example: "123456"
         type: string
-      username:
-        example: alan
-        type: string
     required:
+    - email
     - password
-    - username
     type: object
   github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponse:
     properties:
@@ -49,13 +50,9 @@ definitions:
       password:
         example: "123456"
         type: string
-      username:
-        example: alan
-        type: string
     required:
     - email
     - password
-    - username
     type: object
   github_com_go-nunu_nunu-layout-advanced_api_v1.Response:
     properties:
