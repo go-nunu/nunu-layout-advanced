@@ -19,8 +19,14 @@ func NewTask(log *log.Logger) *Task {
 	}
 }
 func (t *Task) Start(ctx context.Context) error {
+	gocron.SetPanicHandler(func(jobName string, recoverData interface{}) {
+		t.log.Error("Task Panic", zap.String("job", jobName), zap.Any("recover", recoverData))
+	})
+
 	// eg: crontab task
 	t.scheduler = gocron.NewScheduler(time.UTC)
+	// if you are in China, you will need to change the time zone as follows
+	// t.scheduler = gocron.NewScheduler(time.FixedZone("PRC", 8*60*60))
 
 	_, err := t.scheduler.CronWithSeconds("0/3 * * * * *").Do(func() {
 		t.log.Info("I'm a Task1.")
