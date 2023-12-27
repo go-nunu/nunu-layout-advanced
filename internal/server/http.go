@@ -6,17 +6,17 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/docs"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/server/http"
-	"github.com/spf13/viper"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewHTTPServer(
 	logger *log.Logger,
-	conf *viper.Viper,
+	conf *config.Config,
 	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
 ) *http.Server {
@@ -24,8 +24,8 @@ func NewHTTPServer(
 	s := http.NewServer(
 		gin.Default(),
 		logger,
-		http.WithServerHost(conf.GetString("http.host")),
-		http.WithServerPort(conf.GetInt("http.port")),
+		http.WithServerHost(conf.Http.Host),
+		http.WithServerPort(conf.Http.Port),
 	)
 
 	// swagger doc

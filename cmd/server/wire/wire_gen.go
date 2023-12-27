@@ -12,21 +12,21 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/app"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/sid"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/server/http"
 	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:
 
-func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), error) {
-	jwtJWT := jwt.NewJwt(viperViper)
+func NewWire(configConfig *config.Config, logger *log.Logger) (*app.App, func(), error) {
+	jwtJWT := jwt.NewJwt(configConfig)
 	handlerHandler := handler.NewHandler(logger)
-	db := repository.NewDB(viperViper, logger)
-	client := repository.NewRedis(viperViper)
+	db := repository.NewDB(configConfig, logger)
+	client := repository.NewRedis(configConfig)
 	repositoryRepository := repository.NewRepository(db, client, logger)
 	transaction := repository.NewTransaction(repositoryRepository)
 	sidSid := sid.NewSid()
@@ -34,7 +34,7 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	userRepository := repository.NewUserRepository(repositoryRepository)
 	userService := service.NewUserService(serviceService, userRepository)
 	userHandler := handler.NewUserHandler(handlerHandler, userService)
-	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler)
+	httpServer := server.NewHTTPServer(logger, configConfig, jwtJWT, userHandler)
 	job := server.NewJob(logger)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {

@@ -3,10 +3,12 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/redis/go-redis/v9"
-	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"moul.io/zapgorm2"
 	"time"
@@ -55,21 +57,33 @@ func (r *Repository) Transaction(ctx context.Context, fn func(ctx context.Contex
 	})
 }
 
-func NewDB(conf *viper.Viper, l *log.Logger) *gorm.DB {
+func NewDB(conf *config.Config, l *log.Logger) *gorm.DB {
 	logger := zapgorm2.New(l.Logger)
 	logger.SetAsDefault()
-	db, err := gorm.Open(mysql.Open(conf.GetString("data.mysql.user")), &gorm.Config{Logger: logger})
+	var db *gorm.DB
+	var err error
+	switch conf.Data.Db.Type {
+	case "postgres":
+		db, err = gorm.Open(postgres.Open(conf.Data.Db.Dsn), &gorm.Config{})
+	case "mysql":
+		db, err = gorm.Open(mysql.Open(conf.Data.Db.Dsn), &gorm.Config{})
+	case "sqlite":
+		db, err = gorm.Open(sqlite.Open(conf.Data.Db.Dsn), &gorm.Config{})
+	default:
+		panic(fmt.Sprintf("%s error: 数据库类型不支持", conf.Data.Db.Type))
+	}
 	if err != nil {
 		panic(err)
 	}
 	db = db.Debug()
 	return db
 }
-func NewRedis(conf *viper.Viper) *redis.Client {
+func NewRedis(conf *config.Config) *redis.Client {
+	println(conf.Data.Redis.Addr)
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     conf.GetString("data.redis.addr"),
-		Password: conf.GetString("data.redis.password"),
-		DB:       conf.GetInt("data.redis.db"),
+		Addr:     conf.Data.Redis.Addr,
+		Password: conf.Data.Redis.Password,
+		DB:       conf.Data.Redis.DB,
 	})
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

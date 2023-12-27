@@ -10,15 +10,15 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/app"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:
 
-func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), error) {
-	db := repository.NewDB(viperViper, logger)
+func NewWire(configConfig *config.Config, logger *log.Logger) (*app.App, func(), error) {
+	db := repository.NewDB(configConfig, logger)
 	migrate := server.NewMigrate(db, logger)
 	appApp := newApp(migrate)
 	return appApp, func() {
