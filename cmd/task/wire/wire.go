@@ -6,9 +6,9 @@ package wire
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/app"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 var taskSet = wire.NewSet(server.NewTask)
@@ -21,7 +21,7 @@ func newApp(task *server.Task) *app.App {
 	)
 }
 
-func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
+func NewWire(*config.Config, *log.Logger) (*app.App, func(), error) {
 	panic(wire.Build(
 		taskSet,
 		newApp,

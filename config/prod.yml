@@ -9,8 +9,9 @@ security:
   jwt:
     key: QQYnRFerJTSEcrfB89fw8prOaObmrch8
 data:
-  mysql:
-    user: root:123456@tcp(127.0.0.1:3380)/user?charset=utf8mb4&parseTime=True&loc=Local
+  db:
+    type: sqlite   # postgres mysql sqlite
+    dsn: fileos.db  #
   redis:
     addr: 127.0.0.1:6350
     password: ""

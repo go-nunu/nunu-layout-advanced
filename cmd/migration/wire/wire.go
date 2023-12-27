@@ -7,9 +7,9 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/app"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 var repositorySet = wire.NewSet(
@@ -27,7 +27,7 @@ func newApp(migrate *server.Migrate) *app.App {
 	)
 }
 
-func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
+func NewWire(*config.Config, *log.Logger) (*app.App, func(), error) {
 	panic(wire.Build(
 		repositorySet,
 		server.NewMigrate,

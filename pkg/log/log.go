@@ -3,7 +3,7 @@ package log
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -17,10 +17,10 @@ type Logger struct {
 	*zap.Logger
 }
 
-func NewLog(conf *viper.Viper) *Logger {
+func NewLog(conf *config.Config) *Logger {
 	// log address "out.log" User-defined
-	lp := conf.GetString("log.log_file_name")
-	lv := conf.GetString("log.log_level")
+	lp := conf.Log.Filename
+	lv := conf.Log.Level
 	var level zapcore.Level
 	//debug<info<warn<error<fatal<panic
 	switch lv {
@@ -36,15 +36,15 @@ func NewLog(conf *viper.Viper) *Logger {
 		level = zap.InfoLevel
 	}
 	hook := lumberjack.Logger{
-		Filename:   lp,                             // Log file path
-		MaxSize:    conf.GetInt("log.max_size"),    // Maximum size unit for each log file: M
-		MaxBackups: conf.GetInt("log.max_backups"), // The maximum number of backups that can be saved for log files
-		MaxAge:     conf.GetInt("log.max_age"),     // Maximum number of days the file can be saved
-		Compress:   conf.GetBool("log.compress"),   // Compression or not
+		Filename:   lp,                  // Log file path
+		MaxSize:    conf.Log.MaxSize,    // Maximum size unit for each log file: M
+		MaxBackups: conf.Log.MaxBackups, // The maximum number of backups that can be saved for log files
+		MaxAge:     conf.Log.MaxAge,     // Maximum number of days the file can be saved
+		Compress:   conf.Log.Compress,   // Compression or not
 	}
 
 	var encoder zapcore.Encoder
-	if conf.GetString("log.encoding") == "console" {
+	if conf.Log.Encoding == "console" {
 		encoder = zapcore.NewConsoleEncoder(zapcore.EncoderConfig{
 			TimeKey:        "ts",
 			LevelKey:       "level",
@@ -79,7 +79,7 @@ func NewLog(conf *viper.Viper) *Logger {
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&hook)), // Print to console and file
 		level,
 	)
-	if conf.GetString("env") != "prod" {
+	if conf.Env != "prod" {
 		return &Logger{zap.New(core, zap.Development(), zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))}
 	}
 	return &Logger{zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))}

@@ -3,15 +3,15 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/md5"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
-	"github.com/spf13/viper"
 	"net/http"
 	"sort"
 	"strings"
 )
 
-func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
+func SignMiddleware(logger *log.Logger, conf *config.Config) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		requiredHeaders := []string{"Timestamp", "Nonce", "Sign", "App-Version"}
 
@@ -25,7 +25,7 @@ func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 		}
 
 		data := map[string]string{
-			"AppKey":     conf.GetString("security.api_sign.app_key"),
+			"AppKey":     conf.Security.Jwt.Key,
 			"Timestamp":  ctx.Request.Header.Get("Timestamp"),
 			"Nonce":      ctx.Request.Header.Get("Nonce"),
 			"AppVersion": ctx.Request.Header.Get("App-Version"),
@@ -41,7 +41,7 @@ func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 		for _, k := range keys {
 			str += k + data[k]
 		}
-		str += conf.GetString("security.api_sign.app_security")
+		str += conf.Security.ApiSign.AppSecret
 
 		if ctx.Request.Header.Get("Sign") != strings.ToUpper(md5.Md5(str)) {
 			v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)

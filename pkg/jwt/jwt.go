@@ -2,11 +2,11 @@ package jwt
 
 import (
 	"errors"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"regexp"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 )
 
 type JWT struct {
@@ -18,8 +18,8 @@ type MyCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func NewJwt(conf *viper.Viper) *JWT {
-	return &JWT{key: []byte(conf.GetString("security.jwt.key"))}
+func NewJwt(conf *config.Config) *JWT {
+	return &JWT{key: []byte(conf.Security.Jwt.Key)}
 }
 
 func (j *JWT) GenToken(userId string, expiresAt time.Time) (string, error) {

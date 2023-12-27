@@ -9,12 +9,12 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/app"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/sid"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/server/http"
 	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 var repositorySet = wire.NewSet(
@@ -49,7 +49,7 @@ func newApp(httpServer *http.Server, job *server.Job) *app.App {
 	)
 }
 
-func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
+func NewWire(*config.Config, *log.Logger) (*app.App, func(), error) {
 
 	panic(wire.Build(
 		repositorySet,
