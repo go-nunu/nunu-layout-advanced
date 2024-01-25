@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/zapgorm2"
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"moul.io/zapgorm2"
 	"time"
 )
 
@@ -57,7 +57,6 @@ func (r *Repository) Transaction(ctx context.Context, fn func(ctx context.Contex
 
 func NewDB(conf *viper.Viper, l *log.Logger) *gorm.DB {
 	logger := zapgorm2.New(l.Logger)
-	logger.SetAsDefault()
 	db, err := gorm.Open(mysql.Open(conf.GetString("data.mysql.user")), &gorm.Config{Logger: logger})
 	if err != nil {
 		panic(err)
