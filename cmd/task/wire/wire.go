@@ -11,7 +11,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-var taskSet = wire.NewSet(server.NewTask)
+var serverSet = wire.NewSet(
+	server.NewTask,
+)
 
 // build App
 func newApp(task *server.Task) *app.App {
@@ -23,7 +25,7 @@ func newApp(task *server.Task) *app.App {
 
 func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
 	panic(wire.Build(
-		taskSet,
+		serverSet,
 		newApp,
 	))
 }

@@ -38,7 +38,6 @@ var handlerSet = wire.NewSet(
 var serverSet = wire.NewSet(
 	server.NewHTTPServer,
 	server.NewJob,
-	server.NewTask,
 )
 
 // build App
