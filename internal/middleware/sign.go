@@ -1,9 +1,9 @@
 package middleware
 
 import (
+	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/gin-gonic/gin"
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/md5"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/spf13/viper"
 	"net/http"
@@ -43,7 +43,7 @@ func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 		}
 		str += conf.GetString("security.api_sign.app_security")
 
-		if ctx.Request.Header.Get("Sign") != strings.ToUpper(md5.Md5(str)) {
+		if ctx.Request.Header.Get("Sign") != strings.ToUpper(cryptor.Md5String(str)) {
 			v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
 			ctx.Abort()
 			return

@@ -1,6 +1,7 @@
 env: local
 http:
-  host: 0.0.0.0
+  #  host: 0.0.0.0
+  host: 127.0.0.1
   port: 8000
 security:
   api_sign:
@@ -9,8 +10,16 @@ security:
   jwt:
     key: QQYnRFerJTSEcrfB89fw8prOaObmrch8
 data:
-  mysql:
-    user: root:123456@tcp(127.0.0.1:3380)/user?charset=utf8mb4&parseTime=True&loc=Local
+  db:
+    user:
+      driver: sqlite
+      dsn: storage/nunu-test.db?_busy_timeout=5000
+  #    user:
+  #      driver: mysql
+  #      dsn: root:123456@tcp(127.0.0.1:3380)/user?charset=utf8mb4&parseTime=True&loc=Local
+  #    user:
+  #      driver: postgres
+  #      dsn: host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai
   redis:
     addr: 127.0.0.1:6350
     password: ""

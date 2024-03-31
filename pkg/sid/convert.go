@@ -1,4 +1,4 @@
-package convert
+package sid
 
 const (
 	base62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

@@ -14,7 +14,7 @@ import (
 
 var repositorySet = wire.NewSet(
 	repository.NewDB,
-	repository.NewRedis,
+	//repository.NewRedis,
 	repository.NewRepository,
 	repository.NewUserRepository,
 )

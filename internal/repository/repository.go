@@ -3,11 +3,13 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/glebarez/sqlite"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/zapgorm2"
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"time"
 )
@@ -15,15 +17,19 @@ import (
 const ctxTxKey = "TxKey"
 
 type Repository struct {
-	db     *gorm.DB
-	rdb    *redis.Client
+	db *gorm.DB
+	//rdb    *redis.Client
 	logger *log.Logger
 }
 
-func NewRepository(db *gorm.DB, rdb *redis.Client, logger *log.Logger) *Repository {
+func NewRepository(
+	logger *log.Logger,
+	db *gorm.DB,
+	// rdb *redis.Client,
+) *Repository {
 	return &Repository{
-		db:     db,
-		rdb:    rdb,
+		db: db,
+		//rdb:    rdb,
 		logger: logger,
 	}
 }
@@ -56,12 +62,44 @@ func (r *Repository) Transaction(ctx context.Context, fn func(ctx context.Contex
 }
 
 func NewDB(conf *viper.Viper, l *log.Logger) *gorm.DB {
+	var (
+		db  *gorm.DB
+		err error
+	)
+
 	logger := zapgorm2.New(l.Logger)
-	db, err := gorm.Open(mysql.Open(conf.GetString("data.mysql.user")), &gorm.Config{Logger: logger})
+	driver := conf.GetString("data.db.user.driver")
+	dsn := conf.GetString("data.db.user.dsn")
+
+	// GORM doc: https://gorm.io/docs/connecting_to_the_database.html
+	switch driver {
+	case "mysql":
+		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+			Logger: logger,
+		})
+	case "postgres":
+		db, err = gorm.Open(postgres.New(postgres.Config{
+			DSN:                  dsn,
+			PreferSimpleProtocol: true, // disables implicit prepared statement usage
+		}), &gorm.Config{})
+	case "sqlite":
+		db, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{})
+	default:
+		panic("unknown db driver")
+	}
 	if err != nil {
 		panic(err)
 	}
 	db = db.Debug()
+
+	// Connection Pool config
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetConnMaxLifetime(time.Hour)
 	return db
 }
 func NewRedis(conf *viper.Viper) *redis.Client {
