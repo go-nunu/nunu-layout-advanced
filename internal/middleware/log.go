@@ -39,7 +39,6 @@ func ResponseLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 		startTime := time.Now()
 		ctx.Next()
 		duration := time.Since(startTime).String()
-		ctx.Header("X-Response-Time", duration)
 		logger.WithContext(ctx).Info("Response", zap.Any("response_body", blw.body.String()), zap.Any("time", duration))
 	}
 }
