@@ -2,7 +2,7 @@ package jwt
 
 import (
 	"errors"
-	"regexp"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -45,9 +45,8 @@ func (j *JWT) GenToken(userId string, expiresAt time.Time) (string, error) {
 }
 
 func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
-	re := regexp.MustCompile(`(?i)Bearer `)
-	tokenString = re.ReplaceAllString(tokenString, "")
-	if tokenString == "" {
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+	if strings.TrimSpace(tokenString) == "" {
 		return nil, errors.New("token is empty")
 	}
 	token, err := jwt.ParseWithClaims(tokenString, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
