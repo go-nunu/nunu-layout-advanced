@@ -108,7 +108,7 @@ func (h *UserHandler) GetProfile(ctx *gin.Context) {
 // @Produce json
 // @Security Bearer
 // @Param request body v1.UpdateProfileRequest true "params"
-// @Success 200 {object} v1.GetProfileResponse
+// @Success 200 {object} v1.Response
 // @Router /user [put]
 func (h *UserHandler) UpdateProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
