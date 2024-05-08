@@ -16,7 +16,9 @@ var serverSet = wire.NewSet(
 )
 
 // build App
-func newApp(task *server.Task) *app.App {
+func newApp(
+	task *server.Task,
+) *app.App {
 	return app.NewApp(
 		app.WithServer(task),
 		app.WithName("demo-task"),

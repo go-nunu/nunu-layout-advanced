@@ -41,7 +41,11 @@ var serverSet = wire.NewSet(
 )
 
 // build App
-func newApp(httpServer *http.Server, job *server.Job) *app.App {
+func newApp(
+	httpServer *http.Server,
+	job *server.Job,
+	// task *server.Task,
+) *app.App {
 	return app.NewApp(
 		app.WithServer(httpServer, job),
 		app.WithName("demo-server"),
@@ -49,7 +53,6 @@ func newApp(httpServer *http.Server, job *server.Job) *app.App {
 }
 
 func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
-
 	panic(wire.Build(
 		repositorySet,
 		serviceSet,

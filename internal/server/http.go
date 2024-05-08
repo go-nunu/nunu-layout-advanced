@@ -34,6 +34,7 @@ func NewHTTPServer(
 		swaggerfiles.Handler,
 		//ginSwagger.URL(fmt.Sprintf("http://localhost:%d/swagger/doc.json", conf.GetInt("app.http.port"))),
 		ginSwagger.DefaultModelsExpandDepth(-1),
+		ginSwagger.PersistAuthorization(true),
 	))
 
 	s.Use(

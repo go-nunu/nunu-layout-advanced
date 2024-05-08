@@ -23,7 +23,9 @@ var serverSet = wire.NewSet(
 )
 
 // build App
-func newApp(migrate *server.Migrate) *app.App {
+func newApp(
+	migrate *server.Migrate,
+) *app.App {
 	return app.NewApp(
 		app.WithServer(migrate),
 		app.WithName("demo-migrate"),

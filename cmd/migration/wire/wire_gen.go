@@ -32,6 +32,8 @@ var repositorySet = wire.NewSet(repository.NewDB, repository.NewRepository, repo
 var serverSet = wire.NewSet(server.NewMigrate)
 
 // build App
-func newApp(migrate *server.Migrate) *app.App {
+func newApp(
+	migrate *server.Migrate,
+) *app.App {
 	return app.NewApp(app.WithServer(migrate), app.WithName("demo-migrate"))
 }

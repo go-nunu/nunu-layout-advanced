@@ -99,6 +99,17 @@ func (h *UserHandler) GetProfile(ctx *gin.Context) {
 	v1.HandleSuccess(ctx, user)
 }
 
+// UpdateProfile godoc
+// @Summary 修改用户信息
+// @Schemes
+// @Description
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body v1.UpdateProfileRequest true "params"
+// @Success 200 {object} v1.GetProfileResponse
+// @Router /user [put]
 func (h *UserHandler) UpdateProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 

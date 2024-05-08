@@ -28,6 +28,8 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 var serverSet = wire.NewSet(server.NewTask)
 
 // build App
-func newApp(task *server.Task) *app.App {
+func newApp(
+	task *server.Task,
+) *app.App {
 	return app.NewApp(app.WithServer(task), app.WithName("demo-task"))
 }

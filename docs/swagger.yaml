@@ -62,6 +62,17 @@ definitions:
       message:
         type: string
     type: object
+  github_com_go-nunu_nunu-layout-advanced_api_v1.UpdateProfileRequest:
+    properties:
+      email:
+        example: 1234@gmail.com
+        type: string
+      nickname:
+        example: alan
+        type: string
+    required:
+    - email
+    type: object
 host: localhost:8000
 info:
   contact:
@@ -133,6 +144,28 @@ paths:
       security:
       - Bearer: []
       summary: 获取用户信息
+      tags:
+      - 用户模块
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponse'
+      security:
+      - Bearer: []
+      summary: 修改用户信息
       tags:
       - 用户模块
 securityDefinitions:

@@ -116,6 +116,42 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "修改用户信息",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.UpdateProfileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponse"
+                        }
+                    }
+                }
             }
         }
     },
@@ -211,6 +247,22 @@ const docTemplate = `{
                 "data": {},
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_go-nunu_nunu-layout-advanced_api_v1.UpdateProfileRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "1234@gmail.com"
+                },
+                "nickname": {
+                    "type": "string",
+                    "example": "alan"
                 }
             }
         }
