@@ -11,15 +11,15 @@ services:
       - MYSQL_ROOT_PASSWORD=123456
       - MYSQL_ROOT_HOST=%
       - MYSQL_DATABASE=user
-    volumes:
-      - ./data/mysql/user:/var/lib/mysql
-      - ./conf/mysql/conf.d:/etc/mysql/conf.d
+    # volumes:
+    #   - ./data/mysql/user:/var/lib/mysql
+    #   - ./conf/mysql/conf.d:/etc/mysql/conf.d
   cache-redis:
     image: redis:6-alpine
     hostname: cache-redis
-    volumes:
-      - ./data/redis/cache/:/data
-      - ./conf/redis/cache/redis.conf:/etc/redis/redis.conf
+    # volumes:
+    #   - ./data/redis/cache/:/data
+    #   - ./conf/redis/cache/redis.conf:/etc/redis/redis.conf
     ports:
       - 6350:6379
     command: ["redis-server","/etc/redis/redis.conf"]
