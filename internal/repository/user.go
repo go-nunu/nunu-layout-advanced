@@ -15,7 +15,9 @@ type UserRepository interface {
 	GetByEmail(ctx context.Context, email string) (*model.User, error)
 }
 
-func NewUserRepository(r *Repository) UserRepository {
+func NewUserRepository(
+	r *Repository,
+) UserRepository {
 	return &userRepository{
 		Repository: r,
 	}

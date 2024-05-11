@@ -16,7 +16,10 @@ type UserService interface {
 	UpdateProfile(ctx context.Context, userId string, req *v1.UpdateProfileRequest) error
 }
 
-func NewUserService(service *Service, userRepo repository.UserRepository) UserService {
+func NewUserService(
+	service *Service,
+	userRepo repository.UserRepository,
+) UserService {
 	return &userService{
 		userRepo: userRepo,
 		Service:  service,
