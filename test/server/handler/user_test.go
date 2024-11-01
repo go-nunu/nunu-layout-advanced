@@ -1,65 +1,15 @@
 package handler
 
 import (
-	"bytes"
-	"encoding/json"
-	"flag"
-	"fmt"
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
-	jwt2 "github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/test/mocks/service"
-	"time"
-
 	"net/http"
-	"net/http/httptest"
-	"os"
 	"testing"
 
-	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
 )
-
-var (
-	userId = "xxx"
-)
-var logger *log.Logger
-var hdl *handler.Handler
-var jwt *jwt2.JWT
-var router *gin.Engine
-
-func TestMain(m *testing.M) {
-	fmt.Println("begin")
-	err := os.Setenv("APP_CONF", "../../../config/local.yml")
-	if err != nil {
-		fmt.Println("Setenv error", err)
-	}
-	var envConf = flag.String("conf", "config/local.yml", "config path, eg: -conf ./config/local.yml")
-	flag.Parse()
-	conf := config.NewConfig(*envConf)
-
-	logger = log.NewLog(conf)
-	hdl = handler.NewHandler(logger)
-
-	jwt = jwt2.NewJwt(conf)
-	gin.SetMode(gin.TestMode)
-	router = gin.Default()
-	router.Use(
-		middleware.CORSMiddleware(),
-		middleware.ResponseLogMiddleware(logger),
-		middleware.RequestLogMiddleware(logger),
-		//middleware.SignMiddleware(log),
-	)
-
-	code := m.Run()
-	fmt.Println("test end")
-
-	os.Exit(code)
-}
 
 func TestUserHandler_Register(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -76,12 +26,16 @@ func TestUserHandler_Register(t *testing.T) {
 	userHandler := handler.NewUserHandler(hdl, mockUserService)
 	router.POST("/register", userHandler.Register)
 
-	paramsJson, _ := json.Marshal(params)
-
-	resp := performRequest(router, "POST", "/register", bytes.NewBuffer(paramsJson))
-
-	assert.Equal(t, resp.Code, http.StatusOK)
-	// Add assertions for the response body if needed
+	e := newHttpExcept(t, router)
+	obj := e.POST("/register").
+		WithHeader("Content-Type", "application/json").
+		WithJSON(params).
+		Expect().
+		Status(http.StatusOK).
+		JSON().
+		Object()
+	obj.Value("code").IsEqual(0)
+	obj.Value("message").IsEqual("ok")
 }
 
 func TestUserHandler_Login(t *testing.T) {
@@ -93,40 +47,51 @@ func TestUserHandler_Login(t *testing.T) {
 		Password: "123456",
 	}
 
+	tk := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ4eHgiLCJleHAiOjE3MzgyMjA1MTQsIm5iZiI6MTczMDQ0NDUxNCwiaWF0IjoxNzMwNDQ0NTE0fQ.3D4YupmPBCkv16ESnYyWSV5Mxcdu0twzEUqx0K-UiWo"
 	mockUserService := mock_service.NewMockUserService(ctrl)
-	mockUserService.EXPECT().Login(gomock.Any(), &params).Return("", nil)
+	mockUserService.EXPECT().Login(gomock.Any(), &params).Return(tk, nil)
 
 	userHandler := handler.NewUserHandler(hdl, mockUserService)
 	router.POST("/login", userHandler.Login)
-	paramsJson, _ := json.Marshal(params)
 
-	resp := performRequest(router, "POST", "/login", bytes.NewBuffer(paramsJson))
-
-	assert.Equal(t, resp.Code, http.StatusOK)
-	// Add assertions for the response body if needed
+	obj := newHttpExcept(t, router).POST("/login").
+		WithHeader("Content-Type", "application/json").
+		WithJSON(params).
+		Expect().
+		Status(http.StatusOK).
+		JSON().
+		Object()
+	obj.Value("code").IsEqual(0)
+	obj.Value("message").IsEqual("ok")
+	obj.Value("data").Object().Value("accessToken").IsEqual(tk)
 }
 
 func TestUserHandler_GetProfile(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	nickname := "xxxxx"
 	mockUserService := mock_service.NewMockUserService(ctrl)
 	mockUserService.EXPECT().GetProfile(gomock.Any(), userId).Return(&v1.GetProfileResponseData{
 		UserId:   userId,
-		Nickname: "xxxxx",
+		Nickname: nickname,
 	}, nil)
 
 	userHandler := handler.NewUserHandler(hdl, mockUserService)
 	router.Use(middleware.NoStrictAuth(jwt, logger))
 	router.GET("/user", userHandler.GetProfile)
-	req, _ := http.NewRequest("GET", "/user", nil)
-	req.Header.Set("Authorization", "Bearer "+genToken(t))
 
-	resp := httptest.NewRecorder()
-
-	router.ServeHTTP(resp, req)
-	assert.Equal(t, resp.Code, http.StatusOK)
-	// Add assertions for the response body if needed
+	obj := newHttpExcept(t, router).GET("/user").
+		WithHeader("Authorization", "Bearer "+genToken(t)).
+		Expect().
+		Status(http.StatusOK).
+		JSON().
+		Object()
+	obj.Value("code").IsEqual(0)
+	obj.Value("message").IsEqual("ok")
+	objData := obj.Value("data").Object()
+	objData.Value("userId").IsEqual(userId)
+	objData.Value("nickname").IsEqual(nickname)
 }
 
 func TestUserHandler_UpdateProfile(t *testing.T) {
@@ -144,30 +109,15 @@ func TestUserHandler_UpdateProfile(t *testing.T) {
 	userHandler := handler.NewUserHandler(hdl, mockUserService)
 	router.Use(middleware.StrictAuth(jwt, logger))
 	router.PUT("/user", userHandler.UpdateProfile)
-	paramsJson, _ := json.Marshal(params)
 
-	req, _ := http.NewRequest("PUT", "/user", bytes.NewBuffer(paramsJson))
-	req.Header.Set("Authorization", "Bearer "+genToken(t))
-	req.Header.Set("Content-Type", "application/json")
-	resp := httptest.NewRecorder()
-
-	router.ServeHTTP(resp, req)
-
-	assert.Equal(t, resp.Code, http.StatusOK)
-	// Add assertions for the response body if needed
-}
-
-func performRequest(r http.Handler, method, path string, body *bytes.Buffer) *httptest.ResponseRecorder {
-	req, _ := http.NewRequest(method, path, body)
-	resp := httptest.NewRecorder()
-	r.ServeHTTP(resp, req)
-	return resp
-}
-func genToken(t *testing.T) string {
-	token, err := jwt.GenToken(userId, time.Now().Add(time.Hour*24*90))
-	if err != nil {
-		t.Error(err)
-		return token
-	}
-	return token
+	obj := newHttpExcept(t, router).PUT("/user").
+		WithHeader("Content-Type", "application/json").
+		WithHeader("Authorization", "Bearer "+genToken(t)).
+		WithJSON(params).
+		Expect().
+		Status(http.StatusOK).
+		JSON().
+		Object()
+	obj.Value("code").IsEqual(0)
+	obj.Value("message").IsEqual("ok")
 }
