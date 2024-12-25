@@ -2,24 +2,32 @@ package server
 
 import (
 	"context"
+	"github.com/go-nunu/nunu-layout-advanced/internal/job"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 )
 
-type Job struct {
-	log *log.Logger
+type JobServer struct {
+	log     *log.Logger
+	userJob job.UserJob
 }
 
-func NewJob(
+func NewJobServer(
 	log *log.Logger,
-) *Job {
-	return &Job{
-		log: log,
+	userJob job.UserJob,
+) *JobServer {
+	return &JobServer{
+		log:     log,
+		userJob: userJob,
 	}
 }
-func (j *Job) Start(ctx context.Context) error {
+
+func (j *JobServer) Start(ctx context.Context) error {
+	// Tips: If you want job to start as a separate process, just refer to the task implementation and adjust the code accordingly.
+
 	// eg: kafka consumer
-	return nil
+	err := j.userJob.KafkaConsumer(ctx)
+	return err
 }
-func (j *Job) Stop(ctx context.Context) error {
+func (j *JobServer) Stop(ctx context.Context) error {
 	return nil
 }

@@ -8,6 +8,7 @@ package wire
 
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
+	"github.com/go-nunu/nunu-layout-advanced/internal/job"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
@@ -34,8 +35,10 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	userService := service.NewUserService(serviceService, userRepository)
 	userHandler := handler.NewUserHandler(handlerHandler, userService)
 	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler)
-	job := server.NewJob(logger)
-	appApp := newApp(httpServer, job)
+	jobJob := job.NewJob(transaction, logger, sidSid)
+	userJob := job.NewUserJob(jobJob, userRepository)
+	jobServer := server.NewJobServer(logger, userJob)
+	appApp := newApp(httpServer, jobServer)
 	return appApp, func() {
 	}, nil
 }
@@ -48,13 +51,15 @@ var serviceSet = wire.NewSet(service.NewService, service.NewUserService)
 
 var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler)
 
-var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob)
+var jobSet = wire.NewSet(job.NewJob, job.NewUserJob)
+
+var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJobServer)
 
 // build App
 func newApp(
 	httpServer *http.Server,
-	job *server.Job,
+	jobServer *server.JobServer,
 
 ) *app.App {
-	return app.NewApp(app.WithServer(httpServer, job), app.WithName("demo-server"))
+	return app.NewApp(app.WithServer(httpServer, jobServer), app.WithName("demo-server"))
 }

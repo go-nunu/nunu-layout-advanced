@@ -9,19 +9,21 @@ import (
 	"os"
 )
 
-type Migrate struct {
+type MigrateServer struct {
 	db  *gorm.DB
 	log *log.Logger
 }
 
-func NewMigrate(db *gorm.DB, log *log.Logger) *Migrate {
-	return &Migrate{
+func NewMigrateServer(db *gorm.DB, log *log.Logger) *MigrateServer {
+	return &MigrateServer{
 		db:  db,
 		log: log,
 	}
 }
-func (m *Migrate) Start(ctx context.Context) error {
-	if err := m.db.AutoMigrate(&model.User{}); err != nil {
+func (m *MigrateServer) Start(ctx context.Context) error {
+	if err := m.db.AutoMigrate(
+		&model.User{},
+	); err != nil {
 		m.log.Error("user migrate error", zap.Error(err))
 		return err
 	}
@@ -29,7 +31,7 @@ func (m *Migrate) Start(ctx context.Context) error {
 	os.Exit(0)
 	return nil
 }
-func (m *Migrate) Stop(ctx context.Context) error {
+func (m *MigrateServer) Stop(ctx context.Context) error {
 	m.log.Info("AutoMigrate stop")
 	return nil
 }

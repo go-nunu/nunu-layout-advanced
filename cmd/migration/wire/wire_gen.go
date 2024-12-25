@@ -19,8 +19,8 @@ import (
 
 func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), error) {
 	db := repository.NewDB(viperViper, logger)
-	migrate := server.NewMigrate(db, logger)
-	appApp := newApp(migrate)
+	migrateServer := server.NewMigrateServer(db, logger)
+	appApp := newApp(migrateServer)
 	return appApp, func() {
 	}, nil
 }
@@ -29,11 +29,11 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 var repositorySet = wire.NewSet(repository.NewDB, repository.NewRepository, repository.NewUserRepository)
 
-var serverSet = wire.NewSet(server.NewMigrate)
+var serverSet = wire.NewSet(server.NewMigrateServer)
 
 // build App
 func newApp(
-	migrate *server.Migrate,
+	migrateServer *server.MigrateServer,
 ) *app.App {
-	return app.NewApp(app.WithServer(migrate), app.WithName("demo-migrate"))
+	return app.NewApp(app.WithServer(migrateServer), app.WithName("demo-migrate"))
 }

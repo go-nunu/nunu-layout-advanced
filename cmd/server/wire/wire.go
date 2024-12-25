@@ -5,6 +5,7 @@ package wire
 
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
+	"github.com/go-nunu/nunu-layout-advanced/internal/job"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
@@ -35,19 +36,23 @@ var handlerSet = wire.NewSet(
 	handler.NewUserHandler,
 )
 
+var jobSet = wire.NewSet(
+	job.NewJob,
+	job.NewUserJob,
+)
 var serverSet = wire.NewSet(
 	server.NewHTTPServer,
-	server.NewJob,
+	server.NewJobServer,
 )
 
 // build App
 func newApp(
 	httpServer *http.Server,
-	job *server.Job,
+	jobServer *server.JobServer,
 	// task *server.Task,
 ) *app.App {
 	return app.NewApp(
-		app.WithServer(httpServer, job),
+		app.WithServer(httpServer, jobServer),
 		app.WithName("demo-server"),
 	)
 }
@@ -57,6 +62,7 @@ func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
 		repositorySet,
 		serviceSet,
 		handlerSet,
+		jobSet,
 		serverSet,
 		sid.NewSid,
 		jwt.NewJwt,

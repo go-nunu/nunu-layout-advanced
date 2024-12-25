@@ -3,24 +3,30 @@ package server
 import (
 	"context"
 	"github.com/go-co-op/gocron"
+	"github.com/go-nunu/nunu-layout-advanced/internal/task"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"go.uber.org/zap"
 	"time"
 )
 
-type Task struct {
+type TaskServer struct {
 	log       *log.Logger
 	scheduler *gocron.Scheduler
+	userTask  task.UserTask
 }
 
-func NewTask(log *log.Logger) *Task {
-	return &Task{
-		log: log,
+func NewTaskServer(
+	log *log.Logger,
+	userTask task.UserTask,
+) *TaskServer {
+	return &TaskServer{
+		log:      log,
+		userTask: userTask,
 	}
 }
-func (t *Task) Start(ctx context.Context) error {
+func (t *TaskServer) Start(ctx context.Context) error {
 	gocron.SetPanicHandler(func(jobName string, recoverData interface{}) {
-		t.log.Error("Task Panic", zap.String("job", jobName), zap.Any("recover", recoverData))
+		t.log.Error("TaskServer Panic", zap.String("job", jobName), zap.Any("recover", recoverData))
 	})
 
 	// eg: crontab task
@@ -28,25 +34,22 @@ func (t *Task) Start(ctx context.Context) error {
 	// if you are in China, you will need to change the time zone as follows
 	// t.scheduler = gocron.NewScheduler(time.FixedZone("PRC", 8*60*60))
 
+	//_, err := t.scheduler.Every("3s").Do(func()
 	_, err := t.scheduler.CronWithSeconds("0/3 * * * * *").Do(func() {
-		t.log.Info("I'm a Task1.")
+		err := t.userTask.CheckUser(ctx)
+		if err != nil {
+			t.log.Error("CheckUser error", zap.Error(err))
+		}
 	})
 	if err != nil {
-		t.log.Error("Task1 error", zap.Error(err))
-	}
-
-	_, err = t.scheduler.Every("3s").Do(func() {
-		t.log.Info("I'm a Task2.")
-	})
-	if err != nil {
-		t.log.Error("Task2 error", zap.Error(err))
+		t.log.Error("CheckUser error", zap.Error(err))
 	}
 
 	t.scheduler.StartBlocking()
 	return nil
 }
-func (t *Task) Stop(ctx context.Context) error {
+func (t *TaskServer) Stop(ctx context.Context) error {
 	t.scheduler.Stop()
-	t.log.Info("Task stop...")
+	t.log.Info("TaskServer stop...")
 	return nil
 }
