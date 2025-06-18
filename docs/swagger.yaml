@@ -1,14 +1,14 @@
 definitions:
-  github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponse:
+  v1.GetProfileResponse:
     properties:
       code:
         type: integer
       data:
-        $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponseData'
+        $ref: '#/definitions/v1.GetProfileResponseData'
       message:
         type: string
     type: object
-  github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponseData:
+  v1.GetProfileResponseData:
     properties:
       nickname:
         example: alan
@@ -16,7 +16,7 @@ definitions:
       userId:
         type: string
     type: object
-  github_com_go-nunu_nunu-layout-advanced_api_v1.LoginRequest:
+  v1.LoginRequest:
     properties:
       email:
         example: 1234@gmail.com
@@ -28,21 +28,21 @@ definitions:
     - email
     - password
     type: object
-  github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponse:
+  v1.LoginResponse:
     properties:
       code:
         type: integer
       data:
-        $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponseData'
+        $ref: '#/definitions/v1.LoginResponseData'
       message:
         type: string
     type: object
-  github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponseData:
+  v1.LoginResponseData:
     properties:
       accessToken:
         type: string
     type: object
-  github_com_go-nunu_nunu-layout-advanced_api_v1.RegisterRequest:
+  v1.RegisterRequest:
     properties:
       email:
         example: 1234@gmail.com
@@ -54,7 +54,7 @@ definitions:
     - email
     - password
     type: object
-  github_com_go-nunu_nunu-layout-advanced_api_v1.Response:
+  v1.Response:
     properties:
       code:
         type: integer
@@ -62,7 +62,7 @@ definitions:
       message:
         type: string
     type: object
-  github_com_go-nunu_nunu-layout-advanced_api_v1.UpdateProfileRequest:
+  v1.UpdateProfileRequest:
     properties:
       email:
         example: 1234@gmail.com
@@ -97,14 +97,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.LoginRequest'
+          $ref: '#/definitions/v1.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponse'
+            $ref: '#/definitions/v1.LoginResponse'
       summary: 账号登录
       tags:
       - 用户模块
@@ -119,14 +119,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.RegisterRequest'
+          $ref: '#/definitions/v1.RegisterRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.Response'
+            $ref: '#/definitions/v1.Response'
       summary: 用户注册
       tags:
       - 用户模块
@@ -140,7 +140,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponse'
+            $ref: '#/definitions/v1.GetProfileResponse'
       security:
       - Bearer: []
       summary: 获取用户信息
@@ -155,14 +155,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.UpdateProfileRequest'
+          $ref: '#/definitions/v1.UpdateProfileRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.Response'
+            $ref: '#/definitions/v1.Response'
       security:
       - Bearer: []
       summary: 修改用户信息
