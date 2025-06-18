@@ -26,9 +26,11 @@ data:
     db: 0
     read_timeout: 0.2s
     write_timeout: 0.2s
-
+  mongo:
+    uri: mongodb://root:123456@localhost:27017
 log:
   log_level: debug
+  mode: both               #  file or console or both
   encoding: console           # json or console
   log_file_name: "./storage/logs/server.log"
   max_backups: 30

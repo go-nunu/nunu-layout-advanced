@@ -74,11 +74,27 @@ func NewLog(conf *viper.Viper) *Logger {
 			EncodeCaller:   zapcore.ShortCallerEncoder,
 		})
 	}
+	// default(both) log to console and file
 	core := zapcore.NewCore(
 		encoder,
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&hook)), // Print to console and file
 		level,
 	)
+	mode := conf.GetString("log.mode")
+	switch mode {
+	case "console":
+		core = zapcore.NewCore(
+			encoder,
+			zapcore.AddSync(os.Stdout),
+			level,
+		)
+	case "file":
+		core = zapcore.NewCore(
+			encoder,
+			zapcore.AddSync(&hook),
+			level,
+		)
+	}
 	if conf.GetString("env") != "prod" {
 		return &Logger{zap.New(core, zap.Development(), zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))}
 	}

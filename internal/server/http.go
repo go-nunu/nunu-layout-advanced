@@ -20,7 +20,9 @@ func NewHTTPServer(
 	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
 ) *http.Server {
-	gin.SetMode(gin.DebugMode)
+	if conf.GetString("env") == "prod" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	s := http.NewServer(
 		gin.Default(),
 		logger,

@@ -8,6 +8,8 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/pkg/zapgorm2"
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,6 +21,7 @@ const ctxTxKey = "TxKey"
 type Repository struct {
 	db *gorm.DB
 	//rdb    *redis.Client
+	//mongo  *mongo.Client
 	logger *log.Logger
 }
 
@@ -26,10 +29,13 @@ func NewRepository(
 	logger *log.Logger,
 	db *gorm.DB,
 	// rdb *redis.Client,
+	//
+	//	mongo *mongo.Client,
 ) *Repository {
 	return &Repository{
 		db: db,
 		//rdb:    rdb,
+		//mongo:  mongo,
 		logger: logger,
 	}
 }
@@ -118,4 +124,28 @@ func NewRedis(conf *viper.Viper) *redis.Client {
 	}
 
 	return rdb
+}
+func NewMongo(conf *viper.Viper) (*mongo.Client, func(), error) {
+	// https://www.mongodb.com/zh-cn/docs/drivers/go/current/
+	uri := conf.GetString("data.mongo.uri")
+	client, err := mongo.Connect(context.TODO(), options.Client().
+		ApplyURI(uri))
+	if err != nil {
+		panic(fmt.Sprintf("mongo client error: %s", err.Error()))
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		panic(fmt.Sprintf("mongo ping error: %s", err.Error()))
+	}
+
+	return client, func() {
+		err = client.Disconnect(ctx)
+		if err != nil {
+			panic(fmt.Sprintf("mongo disconnect error: %s", err.Error()))
+		}
+	}, err
 }
