@@ -4,9 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	apiV1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/docs"
-	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
+	"github.com/go-nunu/nunu-layout-advanced/internal/router"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/server/http"
 	"github.com/spf13/viper"
@@ -17,8 +16,7 @@ import (
 func NewHTTPServer(
 	logger *log.Logger,
 	conf *viper.Viper,
-	jwt *jwt.JWT,
-	userHandler *handler.UserHandler,
+	deps router.RouterDeps,
 ) *http.Server {
 	if conf.GetString("env") == "prod" {
 		gin.SetMode(gin.ReleaseMode)
@@ -53,25 +51,7 @@ func NewHTTPServer(
 	})
 
 	v1 := s.Group("/v1")
-	{
-		// No route group has permission
-		noAuthRouter := v1.Group("/")
-		{
-			noAuthRouter.POST("/register", userHandler.Register)
-			noAuthRouter.POST("/login", userHandler.Login)
-		}
-		// Non-strict permission routing group
-		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))
-		{
-			noStrictAuthRouter.GET("/user", userHandler.GetProfile)
-		}
-
-		// Strict permission routing group
-		strictAuthRouter := v1.Group("/").Use(middleware.StrictAuth(jwt, logger))
-		{
-			strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
-		}
-	}
+	router.InitUserRouter(v1, deps)
 
 	return s
 }
