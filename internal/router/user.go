@@ -1,4 +1,3 @@
-// internal/router/user.go
 package router
 
 import (
