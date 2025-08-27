@@ -37,10 +37,11 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	userHandler := handler.NewUserHandler(handlerHandler, userService)
 	routerDeps := router.RouterDeps{
 		Logger:      logger,
+		Config:      viperViper,
 		JWT:         jwtJWT,
 		UserHandler: userHandler,
 	}
-	httpServer := server.NewHTTPServer(logger, viperViper, routerDeps)
+	httpServer := server.NewHTTPServer(routerDeps)
 	jobJob := job.NewJob(transaction, logger, sidSid)
 	userJob := job.NewUserJob(jobJob, userRepository)
 	jobServer := server.NewJobServer(logger, userJob)

@@ -6,8 +6,8 @@ import (
 )
 
 func InitUserRouter(
-	r *gin.RouterGroup,
 	deps RouterDeps,
+	r *gin.RouterGroup,
 ) {
 	// No route group has permission
 	noAuthRouter := r.Group("/")
