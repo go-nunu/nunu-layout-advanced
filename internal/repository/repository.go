@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/glebarez/sqlite"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/zapgorm2"
@@ -13,7 +15,6 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"time"
 )
 
 const ctxTxKey = "TxKey"
@@ -61,7 +62,7 @@ func (r *Repository) DB(ctx context.Context) *gorm.DB {
 }
 
 func (r *Repository) Transaction(ctx context.Context, fn func(ctx context.Context) error) error {
-	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+	return r.DB(ctx).Transaction(func(tx *gorm.DB) error {
 		ctx = context.WithValue(ctx, ctxTxKey, tx)
 		return fn(ctx)
 	})
